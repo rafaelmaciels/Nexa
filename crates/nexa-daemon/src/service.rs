@@ -3,7 +3,7 @@ use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
 use tracing::{error, info, warn};
 use nexa_common::NexaError;
-use nexa_core::{AppConfig, EdgeSide, ScreenGeometry, SessionEngine, DEFAULT_PORT};
+use nexa_core::{AppConfig, ScreenGeometry, SessionEngine, DEFAULT_PORT};
 use nexa_core::fsm::SessionState;
 use nexa_crypto::MachineIdentity;
 use nexa_net::{NexaClient, NexaDiscoveryService, NexaServer, DEFAULT_DISCOVERY_PORT};
@@ -173,7 +173,7 @@ impl NexaDaemonService {
     async fn run_server_loop(
         server: NexaServer,
         device_name: String,
-        _edge_delay_ms: u64,
+        edge_delay_ms: u64,
         peers: Vec<nexa_core::PeerConfig>,
         is_running: Arc<AtomicBool>,
     ) {
@@ -214,15 +214,15 @@ impl NexaDaemonService {
 
             let screen_mgr = PlatformScreenManager::default();
             let clip_mgr = PlatformClipboardManager::default();
-            let (screen_w, screen_h) = match screen_mgr.get_screen_bounds() {
-                Ok((_, _, w, h)) if w > 0 && h > 0 => (w as u32, h as u32),
-                _ => (1920, 1080),
+            let (screen_x, screen_y, screen_w, screen_h) = match screen_mgr.get_screen_bounds() {
+                Ok((x, y, w, h)) if w > 0 && h > 0 => (x, y, w as u32, h as u32),
+                _ => (0, 0, 1920, 1080),
             };
 
             let mut engine = SessionEngine::new(
                 &device_name,
-                ScreenGeometry::new(screen_w, screen_h),
-                0, // Transição instantânea ao encostar na borda da tela
+                ScreenGeometry::with_origin(screen_x, screen_y, screen_w, screen_h),
+                edge_delay_ms.max(50), // Garante atraso mínimo saudável para evitar transições acidentais
             );
 
             // Registra a tela do cliente na topologia (padrão: à direita da tela principal)
@@ -233,16 +233,14 @@ impl NexaDaemonService {
 
             engine.topology_mut().register_screen(&remote_name, ScreenGeometry::new(1920, 1080));
             engine.topology_mut().link_horizontal(&device_name, &remote_name);
-            // Se não houver monitor configurado à esquerda, permite transição também pela esquerda
-            if engine.topology_mut().get_neighbor(&device_name, EdgeSide::Left).is_none() {
-                engine.topology_mut().link_directed(&device_name, EdgeSide::Left, &remote_name, EdgeSide::Right);
-            }
 
-            info!("Topologia de telas configurada: Mova o mouse para a BORDA DIREITA (ou esquerda) da tela para entrar no Linux.");
+            info!("Topologia de telas configurada: Mova o mouse para a BORDA DIREITA da tela para entrar no Linux.");
 
             let receiver = capturer.receiver().clone();
             let (tx, mut rx) = tokio::sync::mpsc::channel::<NexaPacket>(512);
 
+            let session_active = Arc::new(AtomicBool::new(true));
+            let session_active_clone = Arc::clone(&session_active);
             let is_running_clone = Arc::clone(&is_running);
             let capturer_arc = Arc::new(capturer);
             let capturer_worker = Arc::clone(&capturer_arc);
@@ -251,12 +249,13 @@ impl NexaDaemonService {
             let event_worker_handle = std::thread::Builder::new()
                 .name("nexa-event-pump".into())
                 .spawn(move || {
-                    while is_running_clone.load(Ordering::SeqCst) {
+                    while session_active_clone.load(Ordering::SeqCst) && is_running_clone.load(Ordering::SeqCst) {
                         match receiver.recv_timeout(std::time::Duration::from_millis(15)) {
                             Ok(event) => {
                                 match event {
                                     CapturedInputEvent::MouseMove { x, y } => {
-                                        if let Ok(Some(pkt)) = engine.handle_local_mouse_move(x, y, false) {
+                                        let is_remote = matches!(engine.fsm().current_state(), SessionState::RemoteActive { .. });
+                                        if let Ok(Some(pkt)) = engine.handle_local_mouse_move(x, y, is_remote) {
                                             match engine.fsm().current_state() {
                                                 SessionState::RemoteActive { .. } => {
                                                     capturer_worker.set_suppression(true);
@@ -276,7 +275,7 @@ impl NexaDaemonService {
                                                         Err(_) => (0, 0, 1920, 1080),
                                                     };
                                                     let return_x = vx + vw - 25;
-                                                    let return_y = y.clamp(vy, vy + vh - 1);
+                                                    let return_y = (y + vy).clamp(vy, vy + vh - 1);
                                                     let _ = screen_mgr.set_cursor_position(return_x, return_y);
                                                 }
                                                 _ => {}
@@ -319,6 +318,11 @@ impl NexaDaemonService {
             // Loop de comunicação assíncrona com o cliente
             while is_running.load(Ordering::SeqCst) {
                 tokio::select! {
+                    _ = tokio::time::sleep(tokio::time::Duration::from_millis(100)) => {
+                        if !is_running.load(Ordering::SeqCst) {
+                            break;
+                        }
+                    }
                     maybe_pkt = rx.recv() => {
                         match maybe_pkt {
                             Some(pkt) => {
@@ -357,8 +361,12 @@ impl NexaDaemonService {
                 }
             }
 
+            session_active.store(false, Ordering::SeqCst);
             capturer_arc.set_suppression(false);
-            let _ = event_worker_handle;
+            if let Ok(handle) = event_worker_handle {
+                let _ = handle.join();
+            }
+            drop(capturer_arc);
             info!("Conexão finalizada. Servidor aguarda nova conexão.");
         }
     }
@@ -399,29 +407,38 @@ impl NexaDaemonService {
                     );
 
                     while is_running.load(Ordering::SeqCst) {
-                        match secure_conn.recv_packet().await {
-                            Ok(Some(packet)) => {
-                                if matches!(packet, NexaPacket::ScreenEnter(_)) {
-                                    info!(">>> [KVM CLIENTE] Cursor e teclado recebidos do host Windows!");
-                                } else if matches!(packet, NexaPacket::ScreenLeave(_)) {
-                                    info!("<<< [KVM CLIENTE] Cursor devolvido ao host Windows.");
-                                }
-                                if let Err(e) = engine.handle_remote_packet_with_clipboard(
-                                    &packet,
-                                    &injector,
-                                    &screen_mgr,
-                                    &clip_mgr,
-                                ) {
-                                    warn!("Erro ao injetar comando remoto: {}", e);
+                        tokio::select! {
+                            _ = tokio::time::sleep(tokio::time::Duration::from_millis(100)) => {
+                                if !is_running.load(Ordering::SeqCst) {
+                                    break;
                                 }
                             }
-                            Ok(None) => {
-                                info!("O servidor encerrou a sessão.");
-                                break;
-                            }
-                            Err(e) => {
-                                warn!("Conexão com o servidor perdida: {}.", e);
-                                break;
+                            packet_res = secure_conn.recv_packet() => {
+                                match packet_res {
+                                    Ok(Some(packet)) => {
+                                        if matches!(packet, NexaPacket::ScreenEnter(_)) {
+                                            info!(">>> [KVM CLIENTE] Cursor e teclado recebidos do host Windows!");
+                                        } else if matches!(packet, NexaPacket::ScreenLeave(_)) {
+                                            info!("<<< [KVM CLIENTE] Cursor devolvido ao host Windows.");
+                                        }
+                                        if let Err(e) = engine.handle_remote_packet_with_clipboard(
+                                            &packet,
+                                            &injector,
+                                            &screen_mgr,
+                                            &clip_mgr,
+                                        ) {
+                                            warn!("Erro ao injetar comando remoto: {}", e);
+                                        }
+                                    }
+                                    Ok(None) => {
+                                        info!("O servidor encerrou a sessão.");
+                                        break;
+                                    }
+                                    Err(e) => {
+                                        warn!("Conexão com o servidor perdida: {}.", e);
+                                        break;
+                                    }
+                                }
                             }
                         }
                     }

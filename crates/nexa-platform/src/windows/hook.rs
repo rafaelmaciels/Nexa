@@ -1,26 +1,27 @@
-use std::sync::atomic::{AtomicBool, AtomicU32, Ordering};
+use std::sync::atomic::{AtomicBool, AtomicI32, AtomicU32, Ordering};
 use std::sync::Arc;
 use std::thread::JoinHandle;
 use crossbeam_channel::{unbounded, Receiver, Sender};
 use nexa_common::NexaError;
 use nexa_protocol::{KeyState, MouseButton};
-use crate::traits::{CapturedInputEvent, InputCapturer};
+use crate::traits::{CapturedInputEvent, InputCapturer, ScreenManager};
+use crate::WindowsDisplayManager;
 
 #[cfg(windows)]
 use windows_sys::Win32::Foundation::{LPARAM, LRESULT, WPARAM};
 #[cfg(windows)]
 use windows_sys::Win32::UI::WindowsAndMessaging::{
-    CallNextHookEx, DispatchMessageW, GetMessageW, PostThreadMessageW, SetWindowsHookExW,
-    TranslateMessage, UnhookWindowsHookEx, HHOOK, KBDLLHOOKSTRUCT, MSLLHOOKSTRUCT, MSG,
-    WH_KEYBOARD_LL, WH_MOUSE_LL, WM_KEYDOWN, WM_KEYUP, WM_LBUTTONDOWN, WM_LBUTTONUP,
-    WM_MBUTTONDOWN, WM_MBUTTONUP, WM_MOUSEHWHEEL, WM_MOUSEMOVE, WM_MOUSEWHEEL, WM_QUIT,
-    WM_RBUTTONDOWN, WM_RBUTTONUP, WM_SYSKEYDOWN, WM_SYSKEYUP,
+    CallNextHookEx, DispatchMessageW, GetMessageW, PostThreadMessageW, SetCursorPos,
+    SetWindowsHookExW, TranslateMessage, UnhookWindowsHookEx, HHOOK, KBDLLHOOKSTRUCT,
+    MSLLHOOKSTRUCT, MSG, WH_KEYBOARD_LL, WH_MOUSE_LL, WM_KEYDOWN, WM_KEYUP, WM_LBUTTONDOWN,
+    WM_LBUTTONUP, WM_MBUTTONDOWN, WM_MBUTTONUP, WM_MOUSEHWHEEL, WM_MOUSEMOVE, WM_MOUSEWHEEL,
+    WM_QUIT, WM_RBUTTONDOWN, WM_RBUTTONUP, WM_SYSKEYDOWN, WM_SYSKEYUP,
 };
 
 static SUPPRESS_INPUT: AtomicBool = AtomicBool::new(false);
-
-
 static HOOK_THREAD_ID: AtomicU32 = AtomicU32::new(0);
+static WARP_CENTER_X: AtomicI32 = AtomicI32::new(960);
+static WARP_CENTER_Y: AtomicI32 = AtomicI32::new(540);
 
 // Global sender protegido para o callback C do hook
 static mut EVENT_SENDER: Option<Sender<CapturedInputEvent>> = None;
@@ -41,61 +42,110 @@ unsafe extern "system" fn low_level_mouse_proc(
         let ms = *(l_param as *const MSLLHOOKSTRUCT);
         let msg = w_param as u32;
 
-        let event = match msg {
-            WM_MOUSEMOVE => Some(CapturedInputEvent::MouseMove {
-                x: ms.pt.x,
-                y: ms.pt.y,
-            }),
-            WM_LBUTTONDOWN => Some(CapturedInputEvent::MouseButton {
-                button: MouseButton::Left,
-                is_down: true,
-            }),
-            WM_LBUTTONUP => Some(CapturedInputEvent::MouseButton {
-                button: MouseButton::Left,
-                is_down: false,
-            }),
-            WM_RBUTTONDOWN => Some(CapturedInputEvent::MouseButton {
-                button: MouseButton::Right,
-                is_down: true,
-            }),
-            WM_RBUTTONUP => Some(CapturedInputEvent::MouseButton {
-                button: MouseButton::Right,
-                is_down: false,
-            }),
-            WM_MBUTTONDOWN => Some(CapturedInputEvent::MouseButton {
-                button: MouseButton::Middle,
-                is_down: true,
-            }),
-            WM_MBUTTONUP => Some(CapturedInputEvent::MouseButton {
-                button: MouseButton::Middle,
-                is_down: false,
-            }),
-            WM_MOUSEWHEEL => {
-                let delta = ((ms.mouseData >> 16) as i16) as i16;
-                Some(CapturedInputEvent::MouseWheel {
-                    delta_x: 0,
-                    delta_y: delta,
-                })
-            }
-            WM_MOUSEHWHEEL => {
-                let delta = ((ms.mouseData >> 16) as i16) as i16;
-                Some(CapturedInputEvent::MouseWheel {
-                    delta_x: delta,
-                    delta_y: 0,
-                })
-            }
-            _ => None,
-        };
-
-        if let Some(evt) = event {
-            if let Some(ref sender) = EVENT_SENDER {
-                let _ = sender.try_send(evt);
-            }
+        // Se o evento foi injetado pelo SetCursorPos do Nexa, repassa imediatamente e não reprocessa
+        if (ms.flags & 1) != 0 {
+            return CallNextHookEx(std::ptr::null_mut(), n_code, w_param, l_param);
         }
 
-        // Se supressão estiver ativada (modo remoto), consome o evento para não mover o cursor local
-        if SUPPRESS_INPUT.load(Ordering::Relaxed) {
+        let is_suppressed = SUPPRESS_INPUT.load(Ordering::Relaxed);
+
+        if is_suppressed {
+            let cx = WARP_CENTER_X.load(Ordering::Relaxed);
+            let cy = WARP_CENTER_Y.load(Ordering::Relaxed);
+
+            match msg {
+                WM_MOUSEMOVE => {
+                    let dx = ms.pt.x - cx;
+                    let dy = ms.pt.y - cy;
+                    if dx != 0 || dy != 0 {
+                        // Recentraliza o cursor imediatamente para manter a âncora infinita
+                        SetCursorPos(cx, cy);
+                        if let Some(ref sender) = EVENT_SENDER {
+                            let _ = sender.try_send(CapturedInputEvent::MouseMove { x: dx, y: dy });
+                        }
+                    }
+                }
+                WM_LBUTTONDOWN => {
+                    if let Some(ref sender) = EVENT_SENDER {
+                        let _ = sender.try_send(CapturedInputEvent::MouseButton {
+                            button: MouseButton::Left,
+                            is_down: true,
+                        });
+                    }
+                }
+                WM_LBUTTONUP => {
+                    if let Some(ref sender) = EVENT_SENDER {
+                        let _ = sender.try_send(CapturedInputEvent::MouseButton {
+                            button: MouseButton::Left,
+                            is_down: false,
+                        });
+                    }
+                }
+                WM_RBUTTONDOWN => {
+                    if let Some(ref sender) = EVENT_SENDER {
+                        let _ = sender.try_send(CapturedInputEvent::MouseButton {
+                            button: MouseButton::Right,
+                            is_down: true,
+                        });
+                    }
+                }
+                WM_RBUTTONUP => {
+                    if let Some(ref sender) = EVENT_SENDER {
+                        let _ = sender.try_send(CapturedInputEvent::MouseButton {
+                            button: MouseButton::Right,
+                            is_down: false,
+                        });
+                    }
+                }
+                WM_MBUTTONDOWN => {
+                    if let Some(ref sender) = EVENT_SENDER {
+                        let _ = sender.try_send(CapturedInputEvent::MouseButton {
+                            button: MouseButton::Middle,
+                            is_down: true,
+                        });
+                    }
+                }
+                WM_MBUTTONUP => {
+                    if let Some(ref sender) = EVENT_SENDER {
+                        let _ = sender.try_send(CapturedInputEvent::MouseButton {
+                            button: MouseButton::Middle,
+                            is_down: false,
+                        });
+                    }
+                }
+                WM_MOUSEWHEEL => {
+                    let delta = ((ms.mouseData >> 16) as i16) as i16;
+                    if let Some(ref sender) = EVENT_SENDER {
+                        let _ = sender.try_send(CapturedInputEvent::MouseWheel {
+                            delta_x: 0,
+                            delta_y: delta,
+                        });
+                    }
+                }
+                WM_MOUSEHWHEEL => {
+                    let delta = ((ms.mouseData >> 16) as i16) as i16;
+                    if let Some(ref sender) = EVENT_SENDER {
+                        let _ = sender.try_send(CapturedInputEvent::MouseWheel {
+                            delta_x: delta,
+                            delta_y: 0,
+                        });
+                    }
+                }
+                _ => {}
+            }
+
+            // Suprime o evento no Windows para não interagir com a tela local
             return 1;
+        } else {
+            // Modo Local: apenas monitora a posição absoluta do cursor para detecção de borda
+            if msg == WM_MOUSEMOVE {
+                if let Some(ref sender) = EVENT_SENDER {
+                    let _ = sender.try_send(CapturedInputEvent::MouseMove {
+                        x: ms.pt.x,
+                        y: ms.pt.y,
+                    });
+                }
+            }
         }
     }
 
@@ -110,29 +160,29 @@ unsafe extern "system" fn low_level_keyboard_proc(
     l_param: LPARAM,
 ) -> LRESULT {
     if n_code >= 0 {
-        let kb = *(l_param as *const KBDLLHOOKSTRUCT);
         let msg = w_param as u32;
 
-        let state = match msg {
-            WM_KEYDOWN | WM_SYSKEYDOWN => KeyState::Down,
-            WM_KEYUP | WM_SYSKEYUP => KeyState::Up,
-            _ => KeyState::Up,
-        };
+        if msg == WM_KEYDOWN || msg == WM_SYSKEYDOWN || msg == WM_KEYUP || msg == WM_SYSKEYUP {
+            let kb = *(l_param as *const KBDLLHOOKSTRUCT);
+            let is_down = msg == WM_KEYDOWN || msg == WM_SYSKEYDOWN;
+            let state = if is_down { KeyState::Down } else { KeyState::Up };
 
-        let mut scancode = kb.scanCode as u16;
-        if (kb.flags & 1) != 0 {
-            scancode |= 0xE000; // Flag de tecla estendida
-        }
+            let mut scancode = kb.scanCode as u16;
+            if (kb.flags & 1) != 0 {
+                scancode |= 0xE000; // Flag de tecla estendida
+            }
 
-        if let Some(ref sender) = EVENT_SENDER {
-            let _ = sender.try_send(CapturedInputEvent::Key { scancode, state });
-        }
+            let is_suppressed = SUPPRESS_INPUT.load(Ordering::Relaxed);
 
-        // Se supressão estiver ativada, impede que as teclas sejam digitadas na máquina local
-        // Teclas de emergência (ESC: 0x0001 e ScrollLock: 0x0046) sempre passam para restaurar o controle
-        if SUPPRESS_INPUT.load(Ordering::Relaxed) {
-            if scancode != 0x0001 && scancode != 0x0046 {
-                return 1;
+            if is_suppressed {
+                if let Some(ref sender) = EVENT_SENDER {
+                    let _ = sender.try_send(CapturedInputEvent::Key { scancode, state });
+                }
+
+                // Teclas de emergência (ESC: 0x0001 e ScrollLock: 0x0046) sempre passam para o Windows
+                if scancode != 0x0001 && scancode != 0x0046 {
+                    return 1;
+                }
             }
         }
     }
@@ -149,6 +199,7 @@ pub struct WindowsInputCapturer {
 
 impl WindowsInputCapturer {
     pub fn new() -> Self {
+        SUPPRESS_INPUT.store(false, Ordering::SeqCst);
         let (sender, receiver) = unbounded();
         unsafe {
             EVENT_SENDER = Some(sender);
@@ -179,6 +230,7 @@ impl InputCapturer for WindowsInputCapturer {
             return Ok(());
         }
 
+        SUPPRESS_INPUT.store(false, Ordering::SeqCst);
         self.is_running.store(true, Ordering::SeqCst);
         let is_running = self.is_running.clone();
 
@@ -242,6 +294,7 @@ impl InputCapturer for WindowsInputCapturer {
     }
 
     fn stop(&mut self) -> Result<(), NexaError> {
+        SUPPRESS_INPUT.store(false, Ordering::SeqCst);
         if !self.is_running.load(Ordering::SeqCst) {
             return Ok(());
         }
@@ -266,7 +319,23 @@ impl InputCapturer for WindowsInputCapturer {
     }
 
     fn set_suppression(&self, suppress: bool) {
-        SUPPRESS_INPUT.store(suppress, Ordering::SeqCst);
+        if suppress {
+            #[cfg(windows)]
+            {
+                let dm = WindowsDisplayManager::new();
+                let (vx, vy, vw, vh) = dm.get_screen_bounds().unwrap_or((0, 0, 1920, 1080));
+                let cx = vx + vw / 2;
+                let cy = vy + vh / 2;
+                WARP_CENTER_X.store(cx, Ordering::SeqCst);
+                WARP_CENTER_Y.store(cy, Ordering::SeqCst);
+                unsafe {
+                    SetCursorPos(cx, cy);
+                }
+            }
+            SUPPRESS_INPUT.store(true, Ordering::SeqCst);
+        } else {
+            SUPPRESS_INPUT.store(false, Ordering::SeqCst);
+        }
     }
 }
 

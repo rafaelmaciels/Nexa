@@ -12,13 +12,29 @@ pub enum EdgeSide {
 /// Informações de geometria de uma tela
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ScreenGeometry {
+    pub x: i32,
+    pub y: i32,
     pub width: u32,
     pub height: u32,
 }
 
 impl ScreenGeometry {
     pub fn new(width: u32, height: u32) -> Self {
-        Self { width, height }
+        Self {
+            x: 0,
+            y: 0,
+            width,
+            height,
+        }
+    }
+
+    pub fn with_origin(x: i32, y: i32, width: u32, height: u32) -> Self {
+        Self {
+            x,
+            y,
+            width,
+            height,
+        }
     }
 }
 

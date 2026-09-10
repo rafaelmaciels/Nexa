@@ -95,3 +95,48 @@ fn test_autostart_generation_windows() {
     assert!(reg.contains("HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run"));
     assert!(reg.contains("NexaDaemon"));
 }
+
+#[tokio::test]
+async fn test_server_client_connection_and_no_freeze() {
+    let tmp_server = tempdir().expect("tempdir server");
+    let server_cfg = tmp_server.path().join("server_nexa.toml");
+
+    let server_opts = DaemonOptions {
+        config_path: server_cfg,
+        is_server_mode: true,
+        listen_port: 24810,
+        enable_discovery: false,
+        connect_target: None,
+    };
+
+    let server_daemon = NexaDaemonService::new(server_opts).expect("Servidor deve instanciar");
+    server_daemon.start().await.expect("Servidor deve iniciar");
+    assert!(server_daemon.is_running());
+
+    // Aguarda bind do socket
+    tokio::time::sleep(tokio::time::Duration::from_millis(150)).await;
+
+    let tmp_client = tempdir().expect("tempdir client");
+    let client_cfg = tmp_client.path().join("client_nexa.toml");
+
+    let client_opts = DaemonOptions {
+        config_path: client_cfg,
+        is_server_mode: false,
+        listen_port: 24811,
+        enable_discovery: false,
+        connect_target: Some("127.0.0.1:24810".to_string()),
+    };
+
+    let client_daemon = NexaDaemonService::new(client_opts).expect("Cliente deve instanciar");
+    client_daemon.start().await.expect("Cliente deve iniciar e conectar");
+    assert!(client_daemon.is_running());
+
+    // Aguarda handshake criptográfico e inicialização do capturador de periféricos no servidor
+    tokio::time::sleep(tokio::time::Duration::from_millis(600)).await;
+
+    // Encerramento limpo de ambos os nós sem travamento
+    client_daemon.stop();
+    server_daemon.stop();
+    assert!(!client_daemon.is_running());
+    assert!(!server_daemon.is_running());
+}
