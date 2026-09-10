@@ -25,6 +25,9 @@ OPÇÕES:
     -v, --version                  Exibe a versão instalada do Nexa
     -c, --config <ARQUIVO>         Caminho para arquivo de configuração TOML (Padrão: nexa.toml)
     -p, --port <PORTA>             Porta de escuta TCP para conexões de rede (Padrão: 25800)
+    --server                       Executa em modo Servidor (Host que compartilha teclado e mouse)
+    --client <IP[:PORTA]>          Executa em modo Cliente (Guest que recebe o controle do cursor)
+    --connect <IP[:PORTA]>         Alias para --client
     --test-connection <IP[:PORTA]> Executa diagnóstico detalhado de rede e reachability
     --interfaces                   Lista interfaces de rede locais e seus endereços IP
     --no-discovery                 Desativa a descoberta automática de nós via UDP broadcast
@@ -66,6 +69,16 @@ async fn main() {
                     if let Ok(port) = args[i + 1].parse::<u16>() {
                         options.listen_port = port;
                     }
+                    i += 1;
+                }
+            }
+            "--server" => {
+                options.is_server_mode = true;
+            }
+            "--client" | "--connect" => {
+                options.is_server_mode = false;
+                if i + 1 < args.len() && !args[i + 1].starts_with('-') {
+                    options.connect_target = Some(args[i + 1].clone());
                     i += 1;
                 }
             }

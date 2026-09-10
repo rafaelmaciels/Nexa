@@ -15,6 +15,7 @@ async fn test_daemon_configuration_bootstrap() {
         is_server_mode: true,
         listen_port: 24805,
         enable_discovery: false, // Desativa broadcast durante o teste unitário
+        connect_target: None,
     };
 
     let daemon = NexaDaemonService::new(options).expect("Falha ao instanciar daemon");
@@ -35,6 +36,7 @@ async fn test_daemon_lifecycle_start_and_stop() {
         is_server_mode: true,
         listen_port: 24806,
         enable_discovery: false,
+        connect_target: None,
     };
 
     let daemon = NexaDaemonService::new(options).expect("Falha ao instanciar daemon");
@@ -43,6 +45,27 @@ async fn test_daemon_lifecycle_start_and_stop() {
     daemon.start().await.expect("Falha ao iniciar daemon");
     assert!(daemon.is_running());
 
+    daemon.stop();
+    assert!(!daemon.is_running());
+}
+
+#[tokio::test]
+async fn test_daemon_client_mode_initialization() {
+    let tmp = tempdir().expect("Falha ao criar tempdir");
+    let config_path = tmp.path().join("client_nexa.toml");
+
+    let options = DaemonOptions {
+        config_path,
+        is_server_mode: false,
+        listen_port: 24807,
+        enable_discovery: false,
+        connect_target: Some("127.0.0.1:24807".to_string()),
+    };
+
+    let daemon = NexaDaemonService::new(options).expect("Falha ao instanciar daemon em modo cliente");
+    assert!(!daemon.is_running());
+    daemon.start().await.expect("Falha ao iniciar daemon em modo cliente");
+    assert!(daemon.is_running());
     daemon.stop();
     assert!(!daemon.is_running());
 }

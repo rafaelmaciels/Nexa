@@ -1,0 +1,137 @@
+name: Nexa Release Pipeline
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  # ==========================================
+  # 1. Build & Empacotamento Windows 11 (x64)
+  # ==========================================
+  build-windows:
+    name: Build Windows 11 (x64)
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repositório
+        uses: actions/checkout@v4
+
+      - name: Instalar Rust Toolchain (stable)
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Configurar Cache do Cargo
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-
+
+      - name: Executar Testes Unitários e Integração
+        run: cargo test --workspace
+
+      - name: Compilar e Empacotar Pacote Windows
+        shell: powershell
+        run: |
+          .\scripts\package-windows.ps1
+
+      - name: Upload Artefato Windows (ZIP)
+        uses: actions/upload-artifact@v4
+        with:
+          name: nexa-windows-x64
+          path: dist/nexa-windows-x64.zip
+
+  # ==========================================
+  # 2. Build & Empacotamento Linux (.deb)
+  # ==========================================
+  build-linux:
+    name: Build Linux (.deb / elementary OS 8.1 Wayland)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repositório
+        uses: actions/checkout@v4
+
+      - name: Instalar Dependências do Sistema
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential pkg-config libssl-dev dpkg-dev
+
+      - name: Instalar Rust Toolchain (stable)
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Configurar Cache do Cargo
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-
+
+      - name: Executar Testes Unitários e Integração
+        run: cargo test --workspace
+
+      - name: Compilar e Empacotar Pacote Debian (.deb)
+        run: |
+          chmod +x ./scripts/package-debian.sh
+          ./scripts/package-debian.sh
+
+      - name: Upload Artefato Linux (.deb)
+        uses: actions/upload-artifact@v4
+        with:
+          name: nexa-linux-deb
+          path: dist/*.deb
+
+  # ==========================================
+  # 3. Publicação Oficial no GitHub Releases
+  # ==========================================
+  publish-release:
+    name: Publicar Release Oficial no GitHub
+    needs: [build-windows, build-linux]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repositório
+        uses: actions/checkout@v4
+
+      - name: Baixar Artefato Windows
+        uses: actions/download-artifact@v4
+        with:
+          name: nexa-windows-x64
+          path: dist-release/
+
+      - name: Baixar Artefato Linux
+        uses: actions/download-artifact@v4
+        with:
+          name: nexa-linux-deb
+          path: dist-release/
+
+      - name: Listar Arquivos de Distribuição
+        run: ls -lh dist-release/
+
+      - name: Publicar GitHub Release com Binários Anexados
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          name: "Nexa ${{ github.ref_name }}"
+          draft: false
+          prerelease: false
+          generate_release_notes: true
+          files: |
+            dist-release/nexa-windows-x64.zip
+            dist-release/*.deb

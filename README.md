@@ -16,7 +16,7 @@
   <a href="#-desenvolvimento"><img src="https://img.shields.io/badge/Linguagem-Rust%202021-orange" alt="Linguagem"></a>
   <a href="#-licença"><img src="https://img.shields.io/badge/Licen%C3%A7a-MIT%20%2F%20Apache--2.0-green" alt="Licença"></a>
   <a href="#"><img src="https://img.shields.io/badge/Vers%C3%A3o-0.1.0-informational" alt="Versão"></a>
-  <a href="#"><img src="https://img.shields.io/badge/Testes-71%20Aprovados%20(100%25)-success" alt="Status dos Testes"></a>
+  <a href="#"><img src="https://img.shields.io/badge/Testes-72%20Aprovados%20(100%25)-success" alt="Status dos Testes"></a>
 </p>
 
 ---
@@ -63,6 +63,10 @@ Projetado em **Rust**, o Nexa elimina as dívidas técnicas de décadas de softw
 
 ## 📦 Instalação
 
+> 📘 **Manuais Completos e Detalhados**:
+> - 🪟 [**Manual Oficial de Instalação no Windows 11 / 10**](docs/MANUAL_WINDOWS.md)
+> - 🐧 [**Manual Oficial de Instalação no Linux (elementary OS 8.1 Wayland / Ubuntu / Debian)**](docs/MANUAL_LINUX.md)
+
 ### Windows 11
 
 #### Requisitos
@@ -71,7 +75,7 @@ Projetado em **Rust**, o Nexa elimina as dívidas técnicas de décadas de softw
 
 #### Passo 1: Download
 Baixe o pacote executável mais recente do Nexa:
-- [LINK DE DOWNLOAD DO NEXA PARA WINDOWS]
+- 💾 [**Download Nexa para Windows (nexa-windows-x64.zip)**](https://github.com/rafaelmaciels/Nexa/releases/latest/download/nexa-windows-x64.zip)
 
 *(Caso esteja compilando do código-fonte, utilize `cargo build --release --bin nexa-daemon`)*.
 
@@ -101,7 +105,7 @@ nexa-daemon.exe --autostart-enable
 
 #### Instalação via Pacote `.deb`
 1. Baixe o pacote oficial:
-   - [LINK DE DOWNLOAD DO NEXA PARA LINUX (.DEB)]
+   - 📦 [**Download Nexa para Linux (nexa_0.1.0_amd64.deb)**](https://github.com/rafaelmaciels/Nexa/releases/latest/download/nexa_0.1.0_amd64.deb)
 2. Instale o pacote pelo terminal ou clicando duas vezes no arquivo:
    ```bash
    sudo dpkg -i nexa_0.1.0_amd64.deb
@@ -169,25 +173,29 @@ Se tudo estiver correto, você verá:
 └────────────────────────────────────────────┘
 ```
 
-#### 4. Conectar e Confirmar o Código Visual (SAS PIN)
-Inicie a conexão entre os dois computadores. Na primeira vez em que eles se encontrarem, um código de segurança de 6 dígitos será mostrado nas duas telas (ex.: `482 731`):
+#### 4. Conectar o Cliente e Confirmar o Código de Segurança (SAS PIN)
+No computador receptor (Cliente Linux):
+```bash
+nexa-daemon --client 192.168.1.10:25800
+```
+*(Substitua `192.168.1.10` pelo IP do computador Windows com o teclado/mouse)*.
+
+Na primeira vez em que eles se encontrarem, um código de segurança de 6 dígitos será mostrado nos dois terminais (ex.: `482 731`):
 
 ```text
-┌────────────────────────────────────────┐
-│      Novo computador encontrado        │
-│                                        │
-│  Nome: Linux-Laptop                    │
-│  Endereço: 192.168.1.20:25800          │
-│                                        │
-│  Código de Pareamento:                 │
-│               482 731                  │
-│                                        │
-│        [ Aceitar ]   [ Recusar ]       │
-└────────────────────────────────────────┘
+┌──────────────────────────────────────────────────┐
+│           NOVO COMPUTADOR CONECTADO              │
+├──────────────────────────────────────────────────┤
+│  Código de Pareamento de Segurança (SAS PIN):   │
+│                     482 731                      │
+│                                                  │
+│  Verifique se o código acima é idêntico na tela  │
+│  do outro computador para evitar ataques MITM.   │
+└──────────────────────────────────────────────────┘
 ```
-1. Olhe para as duas telas e certifique-se de que os números coincidem.
-2. Clique em **[ Aceitar ]**.
-3. **Pronto!** A partir desse momento, basta mover o cursor até a borda da tela do Windows para que o mouse e o teclado comecem a controlar o Linux instantaneamente.
+1. Olhe para os dois computadores e certifique-se de que os números coincidem.
+2. **Pronto!** A partir desse momento, basta mover o cursor até a borda da tela do Windows para que o mouse e o teclado comecem a controlar o Linux instantaneamente.
+3. Se precisar retornar o cursor para o Windows a qualquer instante, pressione a tecla `[ Scroll Lock ]`.
 
 ---
 
@@ -222,6 +230,9 @@ manual_port = 25800
 | `-v, --version` | Exibe a versão instalada do Nexa. |
 | `-c, --config <ARQUIVO>` | Especifica um arquivo de configuração customizado. |
 | `-p, --port <PORTA>` | Altera a porta TCP de escuta (Padrão: `25800`). |
+| `--server` | Executa em modo Servidor (Host que compartilha teclado e mouse físico). |
+| `--client <IP[:PORT]>` | Executa em modo Cliente (Guest que recebe controle do cursor à distância). |
+| `--connect <IP[:PORT]>` | Alias para `--client`. |
 | `--test-connection <IP[:PORT]>` | Executa a verificação diagnóstica contra um computador remoto. |
 | `--interfaces` | Lista todos os adaptadores de rede e endereços IP da máquina. |
 | `--no-discovery` | Desativa a descoberta por broadcast UDP na rede local. |

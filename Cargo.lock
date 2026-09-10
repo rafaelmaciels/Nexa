@@ -439,6 +439,7 @@ dependencies = [
 name = "nexa-daemon"
 version = "0.1.0"
 dependencies = [
+ "crossbeam-channel",
  "nexa-common",
  "nexa-core",
  "nexa-crypto",

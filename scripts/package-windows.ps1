@@ -48,6 +48,16 @@ pause
 "@
 $InstallAutostart | Out-File -FilePath "$OutputDir\install-autostart.bat" -Encoding ascii
 
+# 6. Compacta pacote em arquivo ZIP para distribuição
+$ZipOutput = "$ProjectRoot\dist\nexa-windows-x64.zip"
+Write-Host "-> Compactando em $ZipOutput..." -ForegroundColor Yellow
+if (Test-Path $ZipOutput) {
+    Remove-Item -Force $ZipOutput
+}
+Compress-Archive -Path "$OutputDir\*" -DestinationPath $ZipOutput -Force
+
 Write-Host "=== Pacote Windows gerado com sucesso em: $OutputDir ===" -ForegroundColor Green
-Write-Host "Arquivos gerados:"
+Write-Host "Arquivos gerados na pasta:"
 Get-ChildItem $OutputDir | Select-Object Name, Length
+Write-Host "Arquivo ZIP de distribuição:"
+Get-Item $ZipOutput | Select-Object Name, Length
