@@ -476,6 +476,7 @@ name = "nexa-platform"
 version = "0.1.0"
 dependencies = [
  "crossbeam-channel",
+ "libc",
  "nexa-common",
  "nexa-protocol",
  "thiserror",

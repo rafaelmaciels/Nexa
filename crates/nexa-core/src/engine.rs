@@ -21,6 +21,7 @@ pub struct SessionEngine {
     last_mouse_y: Option<i32>,
     virtual_remote_x: f64,
     virtual_remote_y: f64,
+    last_return_time: Option<std::time::Instant>,
 }
 
 impl SessionEngine {
@@ -44,6 +45,7 @@ impl SessionEngine {
             last_mouse_y: None,
             virtual_remote_x: 0.0,
             virtual_remote_y: 0.0,
+            last_return_time: None,
         }
     }
 
@@ -84,6 +86,10 @@ impl SessionEngine {
         self.clipboard_engine.on_remote_clipboard_received(text, clip_mgr)
     }
 
+    pub fn virtual_remote_y(&self) -> f64 {
+        self.virtual_remote_y
+    }
+
     /// Processa movimento físico capturado na máquina local
     /// Retorna `Some(packet)` quando há evento para despacho remoto (como ScreenEnter ou MouseMove)
     pub fn handle_local_mouse_move(
@@ -94,6 +100,13 @@ impl SessionEngine {
     ) -> Result<Option<NexaPacket>, NexaError> {
         match self.fsm.current_state() {
             SessionState::LocalActive | SessionState::EdgeTriggered { .. } => {
+                // Cooldown após retorno para evitar quique acidental ou travamento de borda
+                if let Some(t) = self.last_return_time {
+                    if t.elapsed() < std::time::Duration::from_millis(600) {
+                        return Ok(None);
+                    }
+                }
+
                 // Checa aproximação contra as bordas da tela física local (incluindo origem virtual de múltiplos monitores)
                 let left_edge = self.local_geometry.x;
                 let right_edge = self.local_geometry.x + self.local_geometry.width as i32 - 1;
@@ -119,7 +132,7 @@ impl SessionEngine {
                         let transitioned = self.fsm.on_edge_hit(side, &target_id);
 
                         if transitioned {
-                            self.virtual_remote_x = if side == EdgeSide::Right { 0.0 } else { 1920.0 };
+                            self.virtual_remote_x = if side == EdgeSide::Right { 20.0 } else { 1900.0 };
                             self.virtual_remote_y = (y - top_edge) as f64;
                             self.last_mouse_x = Some(x);
                             self.last_mouse_y = Some(y);
@@ -164,6 +177,7 @@ impl SessionEngine {
                 // o controle do mouse e teclado retorna automaticamente para o computador local (Windows)!
                 if self.virtual_remote_x <= 0.0 {
                     self.fsm.on_return_to_local();
+                    self.last_return_time = Some(std::time::Instant::now());
                     self.last_mouse_x = None;
                     self.last_mouse_y = None;
                     self.virtual_remote_x = 0.0;

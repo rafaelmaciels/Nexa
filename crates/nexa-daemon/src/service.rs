@@ -274,8 +274,8 @@ impl NexaDaemonService {
                                                         Ok(b) => b,
                                                         Err(_) => (0, 0, 1920, 1080),
                                                     };
-                                                    let return_x = vx + vw - 25;
-                                                    let return_y = (y + vy).clamp(vy, vy + vh - 1);
+                                                    let return_x = vx + vw - 120;
+                                                    let return_y = (engine.virtual_remote_y() as i32 + vy).clamp(vy + 50, vy + vh - 50);
                                                     let _ = screen_mgr.set_cursor_position(return_x, return_y);
                                                 }
                                                 _ => {}
@@ -302,6 +302,11 @@ impl NexaDaemonService {
                                                 capturer_worker.set_suppression(false);
                                                 let _ = tx.try_send(NexaPacket::ScreenLeave(nexa_protocol::ScreenLeave { timestamp_ms: 0 }));
                                                 info!("Cursor devolvido à tela local via tecla de emergência (ESC / ScrollLock).");
+                                                let (vx, vy, vw, vh) = match screen_mgr.get_screen_bounds() {
+                                                    Ok(b) => b,
+                                                    Err(_) => (0, 0, 1920, 1080),
+                                                };
+                                                let _ = screen_mgr.set_cursor_position(vx + vw / 2, vy + vh / 2);
                                             }
                                         } else if let Some(pkt) = engine.handle_local_key(scancode, state, 0) {
                                             let _ = tx.try_send(pkt);
