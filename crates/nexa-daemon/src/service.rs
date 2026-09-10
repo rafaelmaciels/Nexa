@@ -173,7 +173,7 @@ impl NexaDaemonService {
     async fn run_server_loop(
         server: NexaServer,
         device_name: String,
-        edge_delay_ms: u64,
+        _edge_delay_ms: u64,
         peers: Vec<nexa_core::PeerConfig>,
         is_running: Arc<AtomicBool>,
     ) {
@@ -222,7 +222,7 @@ impl NexaDaemonService {
             let mut engine = SessionEngine::new(
                 &device_name,
                 ScreenGeometry::with_origin(screen_x, screen_y, screen_w, screen_h),
-                edge_delay_ms.max(50), // Garante atraso mínimo saudável para evitar transições acidentais
+                0, // Transição imediata ao encostar na borda (zero delay)
             );
 
             // Registra a tela do cliente na topologia (padrão: à direita da tela principal)

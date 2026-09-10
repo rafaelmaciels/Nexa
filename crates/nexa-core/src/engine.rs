@@ -113,14 +113,14 @@ impl SessionEngine {
                 let top_edge = self.local_geometry.y;
                 let bottom_edge = self.local_geometry.y + self.local_geometry.height as i32 - 1;
 
-                // Margem de tolerância de 4 pixels para garantir que o cursor toque a borda com precisão
-                let hit_side = if x >= right_edge - 3 {
+                // Margem de tolerância de 6 pixels para garantir que o cursor toque a borda com precisão
+                let hit_side = if x >= right_edge - 6 {
                     Some(EdgeSide::Right)
-                } else if x <= left_edge + 3 {
+                } else if x <= left_edge + 6 {
                     Some(EdgeSide::Left)
-                } else if y >= bottom_edge - 3 {
+                } else if y >= bottom_edge - 6 {
                     Some(EdgeSide::Bottom)
-                } else if y <= top_edge + 3 {
+                } else if y <= top_edge + 6 {
                     Some(EdgeSide::Top)
                 } else {
                     None
