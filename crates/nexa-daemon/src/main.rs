@@ -33,6 +33,9 @@ OPÇÕES:
     --no-discovery                 Desativa a descoberta automática de nós via UDP broadcast
     --autostart-enable             Gera e exibe as instruções de inicialização automática no SO
     --autostart-disable            Gera instruções para remoção da inicialização automática
+    --gui                          Inicia e abre o painel gráfico de controle (Padrão ao iniciar)
+    --no-gui, --headless           Executa puramente em linha de comando / sem abrir navegador
+    --gui-port <PORTA>             Porta do painel gráfico Web (Padrão: 25802)
     --daemon                       Executa silenciosamente em segundo plano
 "#,
         NEXA_VERSION
@@ -148,8 +151,25 @@ async fn main() {
                 println!("[Linux - Remoção]: systemctl --user disable --now nexa.service");
                 exit(0);
             }
+            "--gui" => {
+                options.enable_gui = true;
+                options.open_gui_browser = true;
+            }
+            "--no-gui" | "--headless" => {
+                options.enable_gui = false;
+                options.open_gui_browser = false;
+            }
+            "--gui-port" => {
+                if i + 1 < args.len() {
+                    if let Ok(port) = args[i + 1].parse::<u16>() {
+                        options.gui_port = port;
+                    }
+                    i += 1;
+                }
+            }
             "--daemon" => {
                 // Modo silencioso de background
+                options.open_gui_browser = false;
             }
             unknown => {
                 eprintln!("Opção desconhecida: {}", unknown);

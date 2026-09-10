@@ -43,7 +43,7 @@ EOF
 
 # 5. Cria Regra udev para acesso ao /dev/uinput sem sudo
 cat <<EOF > "$DIST_DIR/etc/udev/rules.d/99-nexa-uinput.rules"
-KERNEL=="uinput", GROUP="input", MODE="0660"
+KERNEL=="uinput", SUBSYSTEM=="misc", TAG+="uaccess", OPTIONS+="static_node=uinput", MODE="0666"
 EOF
 
 # 6. Cria Unidade systemd --user

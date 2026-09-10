@@ -36,6 +36,9 @@ pub struct DaemonOptions {
     pub listen_port: u16,
     pub enable_discovery: bool,
     pub connect_target: Option<String>,
+    pub enable_gui: bool,
+    pub gui_port: u16,
+    pub open_gui_browser: bool,
 }
 
 impl Default for DaemonOptions {
@@ -46,6 +49,9 @@ impl Default for DaemonOptions {
             listen_port: DEFAULT_PORT,
             enable_discovery: true,
             connect_target: None,
+            enable_gui: true,
+            gui_port: 25802,
+            open_gui_browser: true,
         }
     }
 }
@@ -163,6 +169,46 @@ impl NexaDaemonService {
 
             tokio::spawn(async move {
                 Self::run_client_loop(target, device_name, is_running).await;
+            });
+        }
+
+        // 3. Inicia o servidor Web GUI incorporado (se ativado)
+        if self.options.enable_gui {
+            let mut gui_state = nexa_ui::GuiServerState::default();
+            gui_state.device_name = self.config.device_name.clone();
+            gui_state.mode = if self.options.is_server_mode && self.options.connect_target.is_none() {
+                "Servidor (Transmissor)".to_string()
+            } else {
+                "Cliente (Receptor)".to_string()
+            };
+
+            for iface in nexa_net::detect_local_interfaces() {
+                if !iface.is_loopback && (iface.ip_address.starts_with("192.168.") || iface.ip_address.starts_with("10.") || iface.ip_address.starts_with("172.")) {
+                    gui_state.ip_address = iface.ip_address;
+                    break;
+                }
+            }
+
+            if !self.config.peers.is_empty() {
+                gui_state.connected_devices = self.config.peers.iter().map(|p| {
+                    nexa_ui::gui_server::ConnectedDeviceInfo {
+                        name: p.name.clone(),
+                        ip: p.manual_ip.as_deref().unwrap_or(&p.ip_or_host).to_string(),
+                        role: "Cliente (Receptor)".to_string(),
+                        position: "Direita".to_string(),
+                        status: if p.is_trusted { "Autorizado" } else { "Pendente" }.to_string(),
+                    }
+                }).collect();
+            }
+
+            let shared_gui_state = std::sync::Arc::new(tokio::sync::RwLock::new(gui_state));
+            let gui_port = self.options.gui_port;
+            let auto_open = self.options.open_gui_browser;
+
+            tokio::spawn(async move {
+                if let Err(e) = nexa_ui::run_gui_server(gui_port, shared_gui_state, auto_open).await {
+                    warn!("GUI Server finalizado ou porta em uso: {}", e);
+                }
             });
         }
 

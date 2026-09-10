@@ -507,8 +507,10 @@ dependencies = [
  "nexa-net",
  "nexa-protocol",
  "serde",
+ "serde_json",
  "thiserror",
  "tokio",
+ "tracing",
 ]
 
 [[package]]

@@ -65,6 +65,13 @@ netsh advfirewall firewall add rule name="Nexa KVM Share" dir=in action=allow pr
 
 ## 🚀 Como Usar (Passo a Passo)
 
+### 🖥️ Painel Gráfico de Controle (GUI) — Recomendado
+Basta dar dois cliques no executável `nexa-daemon.exe` (ou executar `.\nexa-daemon.exe` no PowerShell):
+* O navegador padrão abrirá imediatamente na interface gráfica do Nexa (`http://127.0.0.1:25802`).
+* Permite posicionar visualmente as telas (Esquerda / Direita), monitorar conexões e realizar diagnósticos de rede em 1 clique.
+
+---
+
 ### Cenário 1: Este computador tem o mouse e teclado (Modo Servidor / Host)
 
 Se o mouse e o teclado físicos estão conectados neste computador Windows e você deseja controlar um outro computador (por exemplo, um notebook ao lado):

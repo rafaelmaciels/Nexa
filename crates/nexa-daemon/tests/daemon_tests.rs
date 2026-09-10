@@ -16,6 +16,9 @@ async fn test_daemon_configuration_bootstrap() {
         listen_port: 24805,
         enable_discovery: false, // Desativa broadcast durante o teste unitário
         connect_target: None,
+        enable_gui: false,
+        gui_port: 0,
+        open_gui_browser: false,
     };
 
     let daemon = NexaDaemonService::new(options).expect("Falha ao instanciar daemon");
@@ -37,6 +40,9 @@ async fn test_daemon_lifecycle_start_and_stop() {
         listen_port: 24806,
         enable_discovery: false,
         connect_target: None,
+        enable_gui: false,
+        gui_port: 0,
+        open_gui_browser: false,
     };
 
     let daemon = NexaDaemonService::new(options).expect("Falha ao instanciar daemon");
@@ -60,6 +66,9 @@ async fn test_daemon_client_mode_initialization() {
         listen_port: 24807,
         enable_discovery: false,
         connect_target: Some("127.0.0.1:24807".to_string()),
+        enable_gui: false,
+        gui_port: 0,
+        open_gui_browser: false,
     };
 
     let daemon = NexaDaemonService::new(options).expect("Falha ao instanciar daemon em modo cliente");
@@ -107,6 +116,9 @@ async fn test_server_client_connection_and_no_freeze() {
         listen_port: 24810,
         enable_discovery: false,
         connect_target: None,
+        enable_gui: false,
+        gui_port: 0,
+        open_gui_browser: false,
     };
 
     let server_daemon = NexaDaemonService::new(server_opts).expect("Servidor deve instanciar");
@@ -125,6 +137,9 @@ async fn test_server_client_connection_and_no_freeze() {
         listen_port: 24811,
         enable_discovery: false,
         connect_target: Some("127.0.0.1:24810".to_string()),
+        enable_gui: false,
+        gui_port: 0,
+        open_gui_browser: false,
     };
 
     let client_daemon = NexaDaemonService::new(client_opts).expect("Cliente deve instanciar");

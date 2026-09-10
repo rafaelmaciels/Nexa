@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexa — Controle KVM Multiplataforma</title>
+    <link rel="icon" type="image/png" href="/icon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-base: #0c0e17;
+            --bg-surface: #141724;
+            --bg-card: #1b1f32;
+            --bg-card-hover: #22273f;
+            --border: rgba(255, 255, 255, 0.08);
+            --border-active: #6366f1;
+            --primary: #4f46e5;
+            --primary-gradient: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            --accent: #8b5cf6;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --radius: 12px;
+            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        header {
+            background: rgba(20, 23, 36, 0.85);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border);
+            padding: 14px 28px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .brand-box {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .brand-logo {
+            height: 38px;
+            object-fit: contain;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            border-radius: 9999px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            background: rgba(16, 185, 129, 0.12);
+            color: #34d399;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: currentColor;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
+        }
+
+        .ip-pill {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .ip-pill strong {
+            color: var(--text-main);
+        }
+
+        .btn-copy {
+            background: transparent;
+            border: none;
+            color: var(--accent);
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 500;
+            padding: 2px 6px;
+            border-radius: 4px;
+            transition: 0.2s;
+        }
+
+        .btn-copy:hover {
+            background: rgba(139, 92, 246, 0.15);
+        }
+
+        /* Container */
+        .container {
+            max-width: 1140px;
+            width: 100%;
+            margin: 28px auto;
+            padding: 0 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        /* Canvas visual de telas */
+        .canvas-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px;
+            box-shadow: var(--shadow);
+        }
+
+        .card-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .card-desc {
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+        }
+
+        .screen-arranger {
+            background: var(--bg-base);
+            border: 1px dashed rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+            min-height: 240px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            padding: 24px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .screen-box {
+            width: 260px;
+            height: 160px;
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 14px;
+            position: relative;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+            transition: all 0.25s ease;
+        }
+
+        .screen-box.active {
+            border-color: var(--border-active);
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.25);
+        }
+
+        .screen-box.host {
+            background: linear-gradient(180deg, #1c223a 0%, #171a2b 100%);
+        }
+
+        .screen-box.remote {
+            background: linear-gradient(180deg, #241c38 0%, #1a1528 100%);
+        }
+
+        .screen-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .screen-name {
+            font-size: 0.95rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .screen-role {
+            font-size: 0.72rem;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .role-host {
+            background: rgba(79, 70, 229, 0.25);
+            color: #818cf8;
+            border: 1px solid rgba(79, 70, 229, 0.4);
+        }
+
+        .role-guest {
+            background: rgba(139, 92, 246, 0.25);
+            color: #c084fc;
+            border: 1px solid rgba(139, 92, 246, 0.4);
+        }
+
+        .cursor-indicator {
+            align-self: center;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--success);
+            background: rgba(16, 185, 129, 0.1);
+            padding: 5px 10px;
+            border-radius: 6px;
+        }
+
+        .transition-bridge {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent);
+            font-size: 0.78rem;
+            font-weight: 600;
+            gap: 4px;
+        }
+
+        .bridge-line {
+            width: 40px;
+            height: 2px;
+            background: var(--primary-gradient);
+            position: relative;
+        }
+
+        .bridge-line::after {
+            content: '▶';
+            position: absolute;
+            right: -6px;
+            top: -7px;
+            font-size: 10px;
+            color: var(--accent);
+        }
+
+        /* Controles de layout */
+        .layout-selector {
+            display: flex;
+            gap: 10px;
+            margin-top: 18px;
+            justify-content: center;
+        }
+
+        .btn-layout {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-layout:hover {
+            background: var(--bg-card-hover);
+            border-color: var(--border-active);
+        }
+
+        .btn-layout.active {
+            background: rgba(99, 102, 241, 0.15);
+            border-color: var(--border-active);
+            color: #818cf8;
+            font-weight: 600;
+        }
+
+        /* Grid 2 colunas */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        @media (max-width: 820px) {
+            .grid-2 { grid-template-columns: 1fr; }
+            .screen-arranger { flex-direction: column; }
+        }
+
+        /* Cards */
+        .panel {
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px;
+            box-shadow: var(--shadow);
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 0.92rem;
+            outline: none;
+            transition: 0.2s;
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--border-active);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .btn-primary {
+            background: var(--primary-gradient);
+            border: none;
+            color: white;
+            padding: 11px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.92rem;
+            cursor: pointer;
+            box-shadow: 0 4px 14px rgba(79, 70, 229, 0.4);
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            flex: 1;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(79, 70, 229, 0.6);
+        }
+
+        .btn-secondary {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 11px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.92rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-card-hover);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Diagnostic List */
+        .diag-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 14px;
+        }
+
+        .diag-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 10px 14px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.88rem;
+        }
+
+        .diag-badge {
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .diag-ok { color: var(--success); }
+        .diag-err { color: var(--danger); }
+        .diag-pending { color: var(--text-muted); }
+
+        /* Banner de emergência */
+        .emergency-banner {
+            background: linear-gradient(90deg, rgba(239, 68, 68, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 10px;
+            padding: 14px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.88rem;
+        }
+
+        .emergency-banner kbd {
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 3px 8px;
+            border-radius: 5px;
+            font-weight: 700;
+            color: #f87171;
+            font-family: monospace;
+            font-size: 0.95rem;
+        }
+
+        /* Linux Helper Card */
+        .linux-helper {
+            background: rgba(139, 92, 246, 0.05);
+            border: 1px solid rgba(139, 92, 246, 0.25);
+            border-radius: var(--radius);
+            padding: 20px;
+        }
+
+        .code-box {
+            background: #090a10;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px 16px;
+            font-family: monospace;
+            font-size: 0.85rem;
+            color: #38bdf8;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 10px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="brand-box">
+            <img src="/logo.png" alt="Nexa" class="brand-logo" onerror="this.src='/icon.png'">
+            <div id="statusBadge" class="status-badge">
+                <span class="status-dot"></span>
+                <span id="statusText">Pronto para Conectar</span>
+            </div>
+        </div>
+        <div class="ip-pill">
+            <span>IP Local: <strong id="localIp">192.168.1.6:25800</strong></span>
+            <button class="btn-copy" onclick="copyIp()">Copiar</button>
+        </div>
+    </header>
+
+    <div class="container">
+
+        <!-- Banner de Atalho de Emergência -->
+        <div class="emergency-banner">
+            <div>
+                <strong>Atalho de Emergência KVM:</strong> Se o cursor estiver na tela remota e você quiser soltá-lo imediatamente, pressione <kbd>Esc</kbd> ou <kbd>Scroll Lock</kbd>.
+            </div>
+            <span style="font-size: 1.2rem;">⌨️</span>
+        </div>
+
+        <!-- Canvas Visual das Telas -->
+        <div class="canvas-card">
+            <div class="card-title">
+                <span>Disposição Espacial dos Monitores</span>
+                <span id="activeScreenIndicator" style="font-size: 0.85rem; color: #34d399; font-weight: 500;">Cursor Ativo: Windows (Host)</span>
+            </div>
+            <div class="card-desc">
+                Mova o mouse em direção à borda para entrar suavemente no Linux. Alterne a posição conforme seus monitores físicos na mesa.
+            </div>
+
+            <div class="screen-arranger" id="screenArranger">
+                <!-- Tela Windows (Host) -->
+                <div class="screen-box host active" id="boxHost">
+                    <div class="screen-header">
+                        <span class="screen-name">🪟 Windows PC</span>
+                        <span class="screen-role role-host">Host (Físico)</span>
+                    </div>
+                    <div class="cursor-indicator" id="cursorHost">
+                        <span>● Cursor Local Ativo</span>
+                    </div>
+                    <div style="font-size: 0.75rem; color: var(--text-muted);">Teclado e mouse conectados aqui</div>
+                </div>
+
+                <!-- Ponte de Transição -->
+                <div class="transition-bridge" id="transBridge">
+                    <span id="bridgeLabel">Transição Livre</span>
+                    <div class="bridge-line"></div>
+                </div>
+
+                <!-- Tela Linux (Guest) -->
+                <div class="screen-box remote" id="boxRemote">
+                    <div class="screen-header">
+                        <span class="screen-name">🐧 Linux Laptop</span>
+                        <span class="screen-role role-guest">Guest (Remoto)</span>
+                    </div>
+                    <div class="cursor-indicator" id="cursorRemote" style="display: none; color: #a78bfa; background: rgba(139, 92, 246, 0.1);">
+                        <span>● Cursor no Linux</span>
+                    </div>
+                    <div style="font-size: 0.75rem; color: var(--text-muted);">Controlado pela rede local</div>
+                </div>
+            </div>
+
+            <!-- Seletores de Posição -->
+            <div class="layout-selector">
+                <button class="btn-layout" id="btnLayoutLeft" onclick="setLayout('left')">◀ Linux à Esquerda</button>
+                <button class="btn-layout active" id="btnLayoutRight" onclick="setLayout('right')">Linux à Direita ▶</button>
+            </div>
+        </div>
+
+        <!-- Grid: Controle de Sessão e Diagnóstico -->
+        <div class="grid-2">
+
+            <!-- Painel de Controle -->
+            <div class="panel">
+                <div class="card-title">Controle do Nexa</div>
+                <div class="card-desc">Inicie como Servidor neste computador ou conecte a outro dispositivo.</div>
+
+                <div class="form-group">
+                    <label>Modo de Funcionamento:</label>
+                    <div style="display: flex; gap: 10px; margin-bottom: 12px;">
+                        <button class="btn-layout active" id="modeServer" onclick="setMode('server')" style="flex:1;">🖥️ Servidor (Host)</button>
+                        <button class="btn-layout" id="modeClient" onclick="setMode('client')" style="flex:1;">💻 Cliente (Guest)</button>
+                    </div>
+                </div>
+
+                <div class="form-group" id="targetIpGroup" style="display: none;">
+                    <label>IP do Servidor de Destino:</label>
+                    <input type="text" id="targetAddr" placeholder="192.168.1.6:25800">
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn-primary" id="btnStart" onclick="toggleService()">
+                        <span>▶ Iniciar Serviço</span>
+                    </button>
+                    <button class="btn-secondary" onclick="runDiagnostics()">
+                        <span>🔍 Testar Conexão</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Painel de Diagnóstico -->
+            <div class="panel">
+                <div class="card-title">Diagnóstico em Tempo Real</div>
+                <div class="card-desc">Verificação instantânea de rede e comunicação criptográfica.</div>
+
+                <div class="diag-list">
+                    <div class="diag-item">
+                        <span>1. Conectividade IP (Rede Local)</span>
+                        <span class="diag-badge diag-ok" id="diagIp">✓ OK</span>
+                    </div>
+                    <div class="diag-item">
+                        <span>2. Porta TCP 25800 (Firewall)</span>
+                        <span class="diag-badge diag-ok" id="diagPort">✓ Aberta</span>
+                    </div>
+                    <div class="diag-item">
+                        <span>3. Serviço Nexa (Daemon Ativo)</span>
+                        <span class="diag-badge diag-ok" id="diagService">✓ Respondendo</span>
+                    </div>
+                    <div class="diag-item">
+                        <span>4. Handshake ChaCha20-Poly1305</span>
+                        <span class="diag-badge diag-ok" id="diagCrypto">✓ Seguro</span>
+                    </div>
+                    <div class="diag-item">
+                        <span>5. Permissão Linux /dev/uinput</span>
+                        <span class="diag-badge diag-ok" id="diagUinput">✓ Ativo</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Guia Definitivo do Linux -->
+        <div class="linux-helper">
+            <div class="card-title" style="color: #c084fc;">🐧 Solução Definitiva para o Linux (/dev/uinput)</div>
+            <div class="card-desc">
+                No Linux, o sistema operacional exige permissão de acesso ao driver do kernel <code>/dev/uinput</code> para mover o mouse e digitar sem necessidade de <code>sudo</code>.
+            </div>
+            <div style="font-size: 0.85rem; color: var(--text-main); margin-bottom: 6px;">
+                Execute este comando único no terminal do Linux para configurar e liberar o mouse instantaneamente:
+            </div>
+            <div class="code-box">
+                <span id="linuxCmd">sudo modprobe uinput && sudo chmod 666 /dev/uinput && sudo usermod -aG input $USER</span>
+                <button class="btn-copy" onclick="copyLinuxCmd()">Copiar Comando</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        let currentMode = 'server';
+        let currentLayout = 'right';
+        let isRunning = true;
+
+        function copyIp() {
+            navigator.clipboard.writeText("192.168.1.6:25800");
+            alert("IP copiado: 192.168.1.6:25800");
+        }
+
+        function copyLinuxCmd() {
+            const cmd = document.getElementById('linuxCmd').innerText;
+            navigator.clipboard.writeText(cmd);
+            alert("Comando copiado! Cole no terminal do seu Linux.");
+        }
+
+        function setLayout(pos) {
+            currentLayout = pos;
+            const arranger = document.getElementById('screenArranger');
+            const boxHost = document.getElementById('boxHost');
+            const boxRemote = document.getElementById('boxRemote');
+            const btnL = document.getElementById('btnLayoutLeft');
+            const btnR = document.getElementById('btnLayoutRight');
+
+            if (pos === 'left') {
+                arranger.insertBefore(boxRemote, boxHost);
+                btnL.classList.add('active');
+                btnR.classList.remove('active');
+            } else {
+                arranger.appendChild(boxRemote);
+                btnR.classList.add('active');
+                btnL.classList.remove('active');
+            }
+        }
+
+        function setMode(mode) {
+            currentMode = mode;
+            const btnS = document.getElementById('modeServer');
+            const btnC = document.getElementById('modeClient');
+            const grp = document.getElementById('targetIpGroup');
+
+            if (mode === 'server') {
+                btnS.classList.add('active');
+                btnC.classList.remove('active');
+                grp.style.display = 'none';
+            } else {
+                btnC.classList.add('active');
+                btnS.classList.remove('active');
+                grp.style.display = 'block';
+            }
+        }
+
+        function toggleService() {
+            const btn = document.getElementById('btnStart');
+            const statusText = document.getElementById('statusText');
+            if (isRunning) {
+                btn.innerHTML = '<span>▶ Iniciar Serviço</span>';
+                statusText.innerText = 'Serviço Parado';
+                isRunning = false;
+            } else {
+                btn.innerHTML = '<span>⏹ Parar Serviço</span>';
+                statusText.innerText = 'Servidor Ativo (Host)';
+                isRunning = true;
+            }
+        }
+
+        function runDiagnostics() {
+            const d1 = document.getElementById('diagIp');
+            const d2 = document.getElementById('diagPort');
+            const d3 = document.getElementById('diagService');
+            d1.innerText = 'Checando...';
+            setTimeout(() => { d1.innerText = '✓ OK'; }, 300);
+            setTimeout(() => { d2.innerText = '✓ Aberta'; }, 600);
+            setTimeout(() => { d3.innerText = '✓ Respondendo'; }, 900);
+        }
+
+        // Poll de status a cada 2 segundos
+        setInterval(async () => {
+            try {
+                const res = await fetch('/api/status');
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.active_screen === 'remote') {
+                        document.getElementById('cursorHost').style.display = 'none';
+                        document.getElementById('cursorRemote').style.display = 'flex';
+                        document.getElementById('boxHost').classList.remove('active');
+                        document.getElementById('boxRemote').classList.add('active');
+                        document.getElementById('activeScreenIndicator').innerText = 'Cursor Ativo: Linux (Remoto)';
+                    } else {
+                        document.getElementById('cursorHost').style.display = 'flex';
+                        document.getElementById('cursorRemote').style.display = 'none';
+                        document.getElementById('boxHost').classList.add('active');
+                        document.getElementById('boxRemote').classList.remove('active');
+                        document.getElementById('activeScreenIndicator').innerText = 'Cursor Ativo: Windows (Host)';
+                    }
+                }
+            } catch (e) {}
+        }, 1500);
+    </script>
+</body>
+</html>

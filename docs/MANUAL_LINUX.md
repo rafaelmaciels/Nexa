@@ -62,26 +62,29 @@ sudo cp target/release/nexa-daemon /usr/bin/nexa-daemon
 
 ## 🔐 Permissões do Emulador de Entrada (`/dev/uinput`)
 
-Para que o Nexa consiga movimentar o cursor do mouse e simular teclas no elementary OS 8.1 (Wayland) sem exigir que o programa rode como `root` (o que é uma prática insegura), precisamos garantir acesso ao dispositivo `/dev/uinput`.
+Para que o Nexa consiga movimentar o cursor do mouse e simular teclas no elementary OS 8.1 (Wayland) e Ubuntu sem exigir que o programa rode como `root`, execute o script automático de 1 linha:
 
-### 1. Criar Regra de Permissão `udev`
-Execute no terminal:
 ```bash
-echo 'KERNEL=="uinput", GROUP="input", MODE="0660"' | sudo tee /etc/udev/rules.d/99-nexa-uinput.rules
+curl -sSL https://raw.githubusercontent.com/rafaelmaciels/Nexa/main/scripts/setup-linux-uinput.sh | bash
 ```
 
-### 2. Adicionar seu Usuário ao Grupo `input`
+### Opcional: Configuração Manual de Permissões
+Se preferir executar os comandos manualmente passo a passo:
 ```bash
+# 1. Carrega o módulo uinput no kernel
+sudo modprobe uinput
+
+# 2. Cria a regra udev definitiva para liberar acesso ao cursor
+echo 'KERNEL=="uinput", SUBSYSTEM=="misc", TAG+="uaccess", OPTIONS+="static_node=uinput", MODE="0666"' | sudo tee /etc/udev/rules.d/99-nexa-uinput.rules
+
+# 3. Adiciona seu usuário ao grupo input
 sudo usermod -aG input $USER
-```
 
-### 3. Recarregar as Regras do Sistema
-```bash
+# 4. Aplica imediatamente sem precisar reiniciar ou deslogar
 sudo udevadm control --reload-rules
-sudo udevadm trigger
+sudo udevadm trigger --name-match=uinput || sudo udevadm trigger
+sudo chmod 666 /dev/uinput
 ```
-
-> ⚠️ **Importante**: Para que a alteração de grupo faça efeito, encerre a sessão do usuário (Logout) e faça login novamente, ou simplesmente reinicie o computador.
 
 Para verificar se o seu usuário já possui acesso:
 ```bash
