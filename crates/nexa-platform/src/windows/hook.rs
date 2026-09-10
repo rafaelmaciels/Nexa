@@ -89,7 +89,7 @@ unsafe extern "system" fn low_level_mouse_proc(
 
         if let Some(evt) = event {
             if let Some(ref sender) = EVENT_SENDER {
-                let _ = sender.send(evt);
+                let _ = sender.try_send(evt);
             }
         }
 
@@ -99,7 +99,7 @@ unsafe extern "system" fn low_level_mouse_proc(
         }
     }
 
-    CallNextHookEx(MOUSE_HHOOK, n_code, w_param, l_param)
+    CallNextHookEx(std::ptr::null_mut(), n_code, w_param, l_param)
 }
 
 /// Callback de baixo nível para eventos de teclado
@@ -125,7 +125,7 @@ unsafe extern "system" fn low_level_keyboard_proc(
         }
 
         if let Some(ref sender) = EVENT_SENDER {
-            let _ = sender.send(CapturedInputEvent::Key { scancode, state });
+            let _ = sender.try_send(CapturedInputEvent::Key { scancode, state });
         }
 
         // Se supressão estiver ativada, impede que as teclas sejam digitadas na máquina local
@@ -134,7 +134,7 @@ unsafe extern "system" fn low_level_keyboard_proc(
         }
     }
 
-    CallNextHookEx(KEYBOARD_HHOOK, n_code, w_param, l_param)
+    CallNextHookEx(std::ptr::null_mut(), n_code, w_param, l_param)
 }
 
 /// Capturador nativo de periféricos para Windows 11

@@ -252,21 +252,21 @@ impl NexaDaemonService {
                                                 capturer_worker.set_suppression(true);
                                                 if matches!(pkt, NexaPacket::ScreenEnter(_)) {
                                                     if let Ok(Some(clip_pkt)) = engine.sync_clipboard_on_transition(&clip_mgr) {
-                                                        let _ = tx.blocking_send(clip_pkt);
+                                                        let _ = tx.try_send(clip_pkt);
                                                     }
                                                 }
                                             }
-                                            let _ = tx.blocking_send(pkt);
+                                            let _ = tx.try_send(pkt);
                                         }
                                     }
                                     CapturedInputEvent::MouseButton { button, is_down } => {
                                         if let Some(pkt) = engine.handle_local_mouse_button(button, is_down) {
-                                            let _ = tx.blocking_send(pkt);
+                                            let _ = tx.try_send(pkt);
                                         }
                                     }
                                     CapturedInputEvent::MouseWheel { delta_x, delta_y } => {
                                         if let Some(pkt) = engine.handle_local_mouse_wheel(delta_x, delta_y) {
-                                            let _ = tx.blocking_send(pkt);
+                                            let _ = tx.try_send(pkt);
                                         }
                                     }
                                     CapturedInputEvent::Key { scancode, state } => {
@@ -274,10 +274,10 @@ impl NexaDaemonService {
                                         if scancode == 0x0046 && state == KeyState::Down {
                                             engine.fsm_mut().on_return_to_local();
                                             capturer_worker.set_suppression(false);
-                                            let _ = tx.blocking_send(NexaPacket::ScreenLeave(nexa_protocol::ScreenLeave { timestamp_ms: 0 }));
+                                            let _ = tx.try_send(NexaPacket::ScreenLeave(nexa_protocol::ScreenLeave { timestamp_ms: 0 }));
                                             info!("Cursor devolvido à tela local via atalho de emergência (ScrollLock).");
                                         } else if let Some(pkt) = engine.handle_local_key(scancode, state, 0) {
-                                            let _ = tx.blocking_send(pkt);
+                                            let _ = tx.try_send(pkt);
                                         }
                                     }
                                 }
