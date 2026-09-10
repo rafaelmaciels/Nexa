@@ -1,0 +1,19 @@
+[package]
+name = "nexa-ui"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+
+[dependencies]
+nexa-common = { path = "../nexa-common" }
+nexa-protocol = { path = "../nexa-protocol" }
+nexa-core = { path = "../nexa-core" }
+nexa-crypto = { path = "../nexa-crypto" }
+nexa-net = { path = "../nexa-net" }
+serde = { workspace = true, features = ["derive"] }
+tokio = { workspace = true, features = ["sync", "macros"] }
+thiserror.workspace = true
+
+[dev-dependencies]
+tokio = { workspace = true, features = ["rt-multi-thread"] }

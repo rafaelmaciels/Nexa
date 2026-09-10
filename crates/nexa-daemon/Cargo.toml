@@ -1,0 +1,28 @@
+[package]
+name = "nexa-daemon"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+
+[[bin]]
+name = "nexa-daemon"
+path = "src/main.rs"
+
+[dependencies]
+nexa-common = { path = "../nexa-common" }
+nexa-protocol = { path = "../nexa-protocol" }
+nexa-core = { path = "../nexa-core" }
+nexa-crypto = { path = "../nexa-crypto" }
+nexa-net = { path = "../nexa-net" }
+nexa-platform = { path = "../nexa-platform" }
+nexa-ui = { path = "../nexa-ui" }
+tokio = { workspace = true, features = ["full"] }
+tracing.workspace = true
+tracing-subscriber.workspace = true
+serde = { workspace = true, features = ["derive"] }
+toml.workspace = true
+thiserror.workspace = true
+
+[dev-dependencies]
+tempfile = "3.10"

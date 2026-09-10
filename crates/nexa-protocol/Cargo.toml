@@ -1,0 +1,16 @@
+[package]
+name = "nexa-protocol"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+
+[dependencies]
+nexa-common = { path = "../nexa-common" }
+bytes.workspace = true
+crc32fast.workspace = true
+thiserror.workspace = true
+serde = { workspace = true, features = ["derive"] }
+
+[dev-dependencies]
+tokio = { workspace = true }

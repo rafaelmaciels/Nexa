@@ -1,0 +1,40 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/nexa-common",
+    "crates/nexa-protocol",
+    "crates/nexa-core",
+    "crates/nexa-crypto",
+    "crates/nexa-net",
+    "crates/nexa-platform",
+    "crates/nexa-ui",
+    "crates/nexa-daemon",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+authors = ["Nexa Contributors"]
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/nexa-share/nexa"
+
+[workspace.dependencies]
+thiserror = "1.0"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter", "fmt"] }
+bytes = "1.6"
+crc32fast = "1.4"
+serde = { version = "1.0", features = ["derive"] }
+toml = "0.8"
+tokio = { version = "1.38", features = ["full"] }
+x25519-dalek = { version = "2.0", features = ["static_secrets"] }
+ed25519-dalek = { version = "2.1", features = ["rand_core"] }
+chacha20poly1305 = "0.10"
+hkdf = "0.12"
+sha2 = "0.10"
+rand = "0.8"
+rand_core = { version = "0.6", features = ["std"] }
+windows-sys = { version = "0.59", default-features = false }
+crossbeam-channel = "0.5"
+
+

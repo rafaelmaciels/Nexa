@@ -1,0 +1,17 @@
+[package]
+name = "nexa-common"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+
+[dependencies]
+tracing.workspace = true
+tracing-subscriber.workspace = true
+thiserror.workspace = true
+regex = "1.10"
+serde = { workspace = true, optional = true }
+
+[features]
+default = []
+serde = ["dep:serde"]
