@@ -5,9 +5,20 @@ use crate::traits::ScreenManager;
 use windows_sys::Win32::Foundation::{POINT, RECT};
 #[cfg(windows)]
 use windows_sys::Win32::UI::WindowsAndMessaging::{
-    ClipCursor, GetCursorPos, GetSystemMetrics, SetCursorPos, SM_CXVIRTUALSCREEN,
-    SM_CYVIRTUALSCREEN, SM_XVIRTUALSCREEN, SM_YVIRTUALSCREEN,
+    ClipCursor, GetCursorPos, GetSystemMetrics, SetCursorPos, SetProcessDPIAware,
+    SM_CXVIRTUALSCREEN, SM_CYVIRTUALSCREEN, SM_XVIRTUALSCREEN, SM_YVIRTUALSCREEN,
 };
+
+/// Ativa percepção de DPI (Per-Monitor DPI Aware) para evitar distorção de coordenadas
+#[cfg(windows)]
+pub fn enable_dpi_awareness() {
+    unsafe {
+        let _ = SetProcessDPIAware();
+    }
+}
+
+#[cfg(not(windows))]
+pub fn enable_dpi_awareness() {}
 
 /// Gerenciador de monitores e cursor nativo para Windows
 #[derive(Default)]
@@ -15,6 +26,7 @@ pub struct WindowsDisplayManager;
 
 impl WindowsDisplayManager {
     pub fn new() -> Self {
+        enable_dpi_awareness();
         Self
     }
 }

@@ -41,6 +41,9 @@ OPÇÕES:
 
 #[tokio::main]
 async fn main() {
+    #[cfg(windows)]
+    nexa_platform::enable_dpi_awareness();
+
     // 1. Inicializa o subsistema de logging estruturado
     init_logger(LogLevel::Info);
 

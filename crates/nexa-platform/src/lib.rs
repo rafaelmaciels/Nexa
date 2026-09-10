@@ -15,6 +15,6 @@ pub use linux::{
 
 #[cfg(windows)]
 pub use windows::{
-    WindowsAutostartManager, WindowsClipboardManager, WindowsDisplayManager,
+    enable_dpi_awareness, WindowsAutostartManager, WindowsClipboardManager, WindowsDisplayManager,
     WindowsInputCapturer, WindowsInputInjector,
 };

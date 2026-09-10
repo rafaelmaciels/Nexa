@@ -177,6 +177,9 @@ impl NexaDaemonService {
         peers: Vec<nexa_core::PeerConfig>,
         is_running: Arc<AtomicBool>,
     ) {
+        #[cfg(windows)]
+        nexa_platform::enable_dpi_awareness();
+
         while is_running.load(Ordering::SeqCst) {
             info!("Servidor pronto. Aguardando conexão de outro computador na rede...");
 
@@ -248,13 +251,27 @@ impl NexaDaemonService {
                                 match event {
                                     CapturedInputEvent::MouseMove { x, y } => {
                                         if let Ok(Some(pkt)) = engine.handle_local_mouse_move(x, y, false) {
-                                            if matches!(engine.fsm().current_state(), SessionState::RemoteActive { .. }) {
-                                                capturer_worker.set_suppression(true);
-                                                if matches!(pkt, NexaPacket::ScreenEnter(_)) {
-                                                    if let Ok(Some(clip_pkt)) = engine.sync_clipboard_on_transition(&clip_mgr) {
-                                                        let _ = tx.try_send(clip_pkt);
+                                            match engine.fsm().current_state() {
+                                                SessionState::RemoteActive { .. } => {
+                                                    capturer_worker.set_suppression(true);
+                                                    if matches!(pkt, NexaPacket::ScreenEnter(_)) {
+                                                        if let Ok(Some(clip_pkt)) = engine.sync_clipboard_on_transition(&clip_mgr) {
+                                                            let _ = tx.try_send(clip_pkt);
+                                                        }
                                                     }
                                                 }
+                                                SessionState::LocalActive => {
+                                                    // Transição de retorno suave para a máquina local (Windows)
+                                                    capturer_worker.set_suppression(false);
+                                                    let (vx, vy, vw, vh) = match screen_mgr.get_screen_bounds() {
+                                                        Ok(b) => b,
+                                                        Err(_) => (0, 0, 1920, 1080),
+                                                    };
+                                                    let return_x = vx + vw - 25;
+                                                    let return_y = y.clamp(vy, vy + vh - 1);
+                                                    let _ = screen_mgr.set_cursor_position(return_x, return_y);
+                                                }
+                                                _ => {}
                                             }
                                             let _ = tx.try_send(pkt);
                                         }
@@ -270,12 +287,15 @@ impl NexaDaemonService {
                                         }
                                     }
                                     CapturedInputEvent::Key { scancode, state } => {
-                                        // Tecla Scroll Lock (0x0046) atua como atalho de emergência para retornar à tela local
-                                        if scancode == 0x0046 && state == KeyState::Down {
-                                            engine.fsm_mut().on_return_to_local();
-                                            capturer_worker.set_suppression(false);
-                                            let _ = tx.try_send(NexaPacket::ScreenLeave(nexa_protocol::ScreenLeave { timestamp_ms: 0 }));
-                                            info!("Cursor devolvido à tela local via atalho de emergência (ScrollLock).");
+                                        // Teclas de emergência para retornar o controle à tela local:
+                                        // ESC (0x0001) ou Scroll Lock (0x0046)
+                                        if (scancode == 0x0001 || scancode == 0x0046) && state == KeyState::Down {
+                                            if matches!(engine.fsm().current_state(), SessionState::RemoteActive { .. }) {
+                                                engine.fsm_mut().on_return_to_local();
+                                                capturer_worker.set_suppression(false);
+                                                let _ = tx.try_send(NexaPacket::ScreenLeave(nexa_protocol::ScreenLeave { timestamp_ms: 0 }));
+                                                info!("Cursor devolvido à tela local via tecla de emergência (ESC / ScrollLock).");
+                                            }
                                         } else if let Some(pkt) = engine.handle_local_key(scancode, state, 0) {
                                             let _ = tx.try_send(pkt);
                                         }

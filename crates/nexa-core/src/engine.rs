@@ -2,7 +2,7 @@ use nexa_common::NexaError;
 use nexa_platform::{ClipboardManager, InputInjector, ScreenManager};
 use nexa_protocol::{
     KeyEvent, KeyState, MouseButton, MouseButtonMsg, MouseMotionMode, MouseMove, MouseWheel,
-    NexaPacket, ScreenEnter,
+    NexaPacket, ScreenEnter, ScreenLeave,
 };
 use crate::clipboard::ClipboardSyncEngine;
 use crate::coalescer::MouseCoalescer;
@@ -17,6 +17,10 @@ pub struct SessionEngine {
     fsm: SessionFsm,
     coalescer: MouseCoalescer,
     clipboard_engine: ClipboardSyncEngine,
+    last_mouse_x: Option<i32>,
+    last_mouse_y: Option<i32>,
+    virtual_remote_x: f64,
+    virtual_remote_y: f64,
 }
 
 impl SessionEngine {
@@ -36,6 +40,10 @@ impl SessionEngine {
             fsm: SessionFsm::new(edge_delay_ms),
             coalescer: MouseCoalescer::default(),
             clipboard_engine: ClipboardSyncEngine::default(),
+            last_mouse_x: None,
+            last_mouse_y: None,
+            virtual_remote_x: 0.0,
+            virtual_remote_y: 0.0,
         }
     }
 
@@ -108,9 +116,13 @@ impl SessionEngine {
                         let transitioned = self.fsm.on_edge_hit(side, &target_id);
 
                         if transitioned {
+                            self.virtual_remote_x = 0.0;
+                            self.virtual_remote_y = y as f64;
+                            self.last_mouse_x = Some(x);
+                            self.last_mouse_y = Some(y);
+
                             // Calcula entrada proporcional na tela do vizinho
-                            let norm_x = ((x as f64 / self.local_geometry.width as f64) * 65535.0)
-                                .clamp(0.0, 65535.0) as u16;
+                            let norm_x = 0u16; // Entra na borda esquerda da tela remota
                             let norm_y = ((y as f64 / self.local_geometry.height as f64) * 65535.0)
                                 .clamp(0.0, 65535.0) as u16;
 
@@ -128,20 +140,39 @@ impl SessionEngine {
                 Ok(None)
             }
             SessionState::RemoteActive { .. } => {
-                // Em modo remoto: acumula os deltas de mouse para envio via rede
-                let mode = if is_relative {
-                    MouseMotionMode::Relative
+                let (dx, dy) = if is_relative {
+                    (x, y)
                 } else {
-                    MouseMotionMode::Absolute
+                    let prev_x = self.last_mouse_x.unwrap_or(x);
+                    let prev_y = self.last_mouse_y.unwrap_or(y);
+                    self.last_mouse_x = Some(x);
+                    self.last_mouse_y = Some(y);
+                    (x - prev_x, y - prev_y)
                 };
 
-                self.coalescer.push(MouseMove { mode, x, y });
+                self.virtual_remote_x += dx as f64;
+                self.virtual_remote_y += dy as f64;
 
-                // Retorna o movimento consolidado se a janela de coalescência tiver completado
+                // Se o cursor foi movimentado de volta para a esquerda da tela remota (x <= 0),
+                // o controle do mouse e teclado retorna automaticamente para o computador local (Windows)!
+                if self.virtual_remote_x < 0.0 || (dx < -15 && self.virtual_remote_x < 40.0) {
+                    self.fsm.on_return_to_local();
+                    self.last_mouse_x = None;
+                    self.last_mouse_y = None;
+                    self.virtual_remote_x = 0.0;
+                    return Ok(Some(NexaPacket::ScreenLeave(ScreenLeave { timestamp_ms: 0 })));
+                }
+
+                let pkt = MouseMove {
+                    mode: MouseMotionMode::Relative,
+                    x: dx,
+                    y: dy,
+                };
+                self.coalescer.push(pkt);
+
                 if self.coalescer.should_flush() {
                     Ok(self.coalescer.flush().map(NexaPacket::MouseMove))
                 } else {
-                    // Retorna movimento direto caso queira transmissão imediata
                     Ok(self.coalescer.flush().map(NexaPacket::MouseMove))
                 }
             }

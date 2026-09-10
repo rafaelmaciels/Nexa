@@ -129,8 +129,11 @@ unsafe extern "system" fn low_level_keyboard_proc(
         }
 
         // Se supressão estiver ativada, impede que as teclas sejam digitadas na máquina local
+        // Teclas de emergência (ESC: 0x0001 e ScrollLock: 0x0046) sempre passam para restaurar o controle
         if SUPPRESS_INPUT.load(Ordering::Relaxed) {
-            return 1;
+            if scancode != 0x0001 && scancode != 0x0046 {
+                return 1;
+            }
         }
     }
 
@@ -188,17 +191,19 @@ impl InputCapturer for WindowsInputCapturer {
                     let thread_id = windows_sys::Win32::System::Threading::GetCurrentThreadId();
                     HOOK_THREAD_ID.store(thread_id, Ordering::SeqCst);
 
+                    let h_mod = windows_sys::Win32::System::LibraryLoader::GetModuleHandleW(std::ptr::null());
+
                     MOUSE_HHOOK = SetWindowsHookExW(
                         WH_MOUSE_LL,
                         Some(low_level_mouse_proc),
-                        std::ptr::null_mut(),
+                        h_mod,
                         0,
                     );
 
                     KEYBOARD_HHOOK = SetWindowsHookExW(
                         WH_KEYBOARD_LL,
                         Some(low_level_keyboard_proc),
-                        std::ptr::null_mut(),
+                        h_mod,
                         0,
                     );
 
