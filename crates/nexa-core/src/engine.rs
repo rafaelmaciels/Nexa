@@ -98,13 +98,14 @@ impl SessionEngine {
                 let right_edge = self.local_geometry.width as i32 - 1;
                 let bottom_edge = self.local_geometry.height as i32 - 1;
 
-                let hit_side = if x >= right_edge {
+                // Margem de tolerância de 4 pixels para garantir que o cursor toque a borda com precisão
+                let hit_side = if x >= right_edge - 3 {
                     Some(EdgeSide::Right)
-                } else if x <= 0 {
+                } else if x <= 3 {
                     Some(EdgeSide::Left)
-                } else if y >= bottom_edge {
+                } else if y >= bottom_edge - 3 {
                     Some(EdgeSide::Bottom)
-                } else if y <= 0 {
+                } else if y <= 3 {
                     Some(EdgeSide::Top)
                 } else {
                     None
@@ -116,13 +117,17 @@ impl SessionEngine {
                         let transitioned = self.fsm.on_edge_hit(side, &target_id);
 
                         if transitioned {
-                            self.virtual_remote_x = 0.0;
+                            self.virtual_remote_x = if side == EdgeSide::Right { 0.0 } else { 1920.0 };
                             self.virtual_remote_y = y as f64;
                             self.last_mouse_x = Some(x);
                             self.last_mouse_y = Some(y);
 
                             // Calcula entrada proporcional na tela do vizinho
-                            let norm_x = 0u16; // Entra na borda esquerda da tela remota
+                            let norm_x = match side {
+                                EdgeSide::Right => 0u16,
+                                EdgeSide::Left => 65535u16,
+                                _ => 32768u16,
+                            };
                             let norm_y = ((y as f64 / self.local_geometry.height as f64) * 65535.0)
                                 .clamp(0.0, 65535.0) as u16;
 
@@ -133,7 +138,7 @@ impl SessionEngine {
                             })));
                         }
                     }
-                } else {
+                } else if x > 15 && x < right_edge - 15 && y > 15 && y < bottom_edge - 15 {
                     self.fsm.on_edge_abort();
                 }
 

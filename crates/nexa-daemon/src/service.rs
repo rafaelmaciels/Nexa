@@ -3,7 +3,7 @@ use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
 use tracing::{error, info, warn};
 use nexa_common::NexaError;
-use nexa_core::{AppConfig, ScreenGeometry, SessionEngine, DEFAULT_PORT};
+use nexa_core::{AppConfig, EdgeSide, ScreenGeometry, SessionEngine, DEFAULT_PORT};
 use nexa_core::fsm::SessionState;
 use nexa_crypto::MachineIdentity;
 use nexa_net::{NexaClient, NexaDiscoveryService, NexaServer, DEFAULT_DISCOVERY_PORT};
@@ -173,7 +173,7 @@ impl NexaDaemonService {
     async fn run_server_loop(
         server: NexaServer,
         device_name: String,
-        edge_delay_ms: u64,
+        _edge_delay_ms: u64,
         peers: Vec<nexa_core::PeerConfig>,
         is_running: Arc<AtomicBool>,
     ) {
@@ -222,7 +222,7 @@ impl NexaDaemonService {
             let mut engine = SessionEngine::new(
                 &device_name,
                 ScreenGeometry::new(screen_w, screen_h),
-                edge_delay_ms,
+                0, // Transição instantânea ao encostar na borda da tela
             );
 
             // Registra a tela do cliente na topologia (padrão: à direita da tela principal)
@@ -233,6 +233,12 @@ impl NexaDaemonService {
 
             engine.topology_mut().register_screen(&remote_name, ScreenGeometry::new(1920, 1080));
             engine.topology_mut().link_horizontal(&device_name, &remote_name);
+            // Se não houver monitor configurado à esquerda, permite transição também pela esquerda
+            if engine.topology_mut().get_neighbor(&device_name, EdgeSide::Left).is_none() {
+                engine.topology_mut().link_directed(&device_name, EdgeSide::Left, &remote_name, EdgeSide::Right);
+            }
+
+            info!("Topologia de telas configurada: Mova o mouse para a BORDA DIREITA (ou esquerda) da tela para entrar no Linux.");
 
             let receiver = capturer.receiver().clone();
             let (tx, mut rx) = tokio::sync::mpsc::channel::<NexaPacket>(512);
@@ -255,6 +261,7 @@ impl NexaDaemonService {
                                                 SessionState::RemoteActive { .. } => {
                                                     capturer_worker.set_suppression(true);
                                                     if matches!(pkt, NexaPacket::ScreenEnter(_)) {
+                                                        info!(">>> [KVM] Cursor cruzou para o Linux! (Pressione ESC a qualquer momento para voltar)");
                                                         if let Ok(Some(clip_pkt)) = engine.sync_clipboard_on_transition(&clip_mgr) {
                                                             let _ = tx.try_send(clip_pkt);
                                                         }
@@ -263,6 +270,7 @@ impl NexaDaemonService {
                                                 SessionState::LocalActive => {
                                                     // Transição de retorno suave para a máquina local (Windows)
                                                     capturer_worker.set_suppression(false);
+                                                    info!("<<< [KVM] Cursor retornou para o Windows!");
                                                     let (vx, vy, vw, vh) = match screen_mgr.get_screen_bounds() {
                                                         Ok(b) => b,
                                                         Err(_) => (0, 0, 1920, 1080),
@@ -393,6 +401,11 @@ impl NexaDaemonService {
                     while is_running.load(Ordering::SeqCst) {
                         match secure_conn.recv_packet().await {
                             Ok(Some(packet)) => {
+                                if matches!(packet, NexaPacket::ScreenEnter(_)) {
+                                    info!(">>> [KVM CLIENTE] Cursor e teclado recebidos do host Windows!");
+                                } else if matches!(packet, NexaPacket::ScreenLeave(_)) {
+                                    info!("<<< [KVM CLIENTE] Cursor devolvido ao host Windows.");
+                                }
                                 if let Err(e) = engine.handle_remote_packet_with_clipboard(
                                     &packet,
                                     &injector,
