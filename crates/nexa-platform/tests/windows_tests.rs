@@ -1,3 +1,5 @@
+#![cfg(windows)]
+
 use nexa_platform::{
     InputCapturer, InputInjector, ScreenManager, WindowsDisplayManager, WindowsInputCapturer,
     WindowsInputInjector,
