@@ -143,12 +143,17 @@ Se algum item falhar, o Nexa exibirá a causa provável (ex: *Porta bloqueada pe
 
 ## ⌨️ Atalhos de Emergência e Comportamento de Borda
 
-* **Atalho de Emergência (Scroll Lock)**:
-  Se o cursor estiver preso no computador remoto ou se você precisar retornar o foco imediatamente para o Windows host, pressione a tecla:
+* **Atalhos de Emergência ([ Esc ] ou [ Scroll Lock ])**:
+  Se o cursor estiver capturado no computador remoto ou se você precisar retornar o foco imediatamente para o computador local (Host), basta pressionar qualquer uma das teclas:
   ```text
-  [ Scroll Lock ]
+  [ Esc ]   ou   [ Scroll Lock ]
   ```
-  O Nexa devolverá o controle imediatamente ao mouse local.
+  O Nexa quebra a captura instantaneamente e devolve o controle ao mouse e teclado locais.
+
+* **Transição Fluida e Margem de Tolerância (Zero Travamentos)**:
+  - Ao encostar o cursor na borda mapeada, o Nexa aciona a transição imediata sem atrito.
+  - Em ambientes com múltiplos monitores, o Nexa detecta os limites reais de cada tela (inclusive coordenadas com offsets negativos), mantendo a movimentação contínua e impedindo que o cursor fique preso nas quinas físicas do Windows.
+  - Durante o controle remoto, o cursor físico local permanece centralizado dinamicamente em segundo plano, garantindo que o sistema operacional local continue respondendo sem congelamento ou atrasos de entrada.
 
 * **Sincronização de Clipboard (Área de Transferência)**:
   Copie normalmente (`Ctrl + C`) em uma tela, atravesse com o mouse para a outra máquina e cole (`Ctrl + V`). O Nexa utiliza codificação UTF-8 completa com suporte a acentos, pontuação em português (ABNT2) e emojis, com proteção anti-echo via hash SHA-256.
