@@ -32,9 +32,11 @@ Copy-Item "$ProjectRoot\README.md" -Destination "$OutputDir\README.txt"
 $DefaultConfig = @"
 # Arquivo de Configuração do Nexa
 device_name = "Windows-PC"
-listen_port = 24800
-edge_delay_ms = 150
-clipboard_sync_enabled = true
+listen_port = 25800
+edge_delay_ms = 100
+auto_connect = true
+log_level = "info"
+peers = []
 "@
 $DefaultConfig | Out-File -FilePath "$OutputDir\nexa.toml" -Encoding utf8
 

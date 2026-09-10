@@ -25,13 +25,13 @@ pub struct PeerConfig {
 
 /// Configuração principal da aplicação Nexa
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+#[serde(default)]
 pub struct AppConfig {
     pub device_name: String,
     pub listen_port: u16,
     pub edge_delay_ms: u64,
     pub auto_connect: bool,
     pub log_level: String,
-    #[serde(default)]
     pub preferred_interface: Option<String>,
     pub peers: Vec<PeerConfig>,
 }
@@ -173,5 +173,26 @@ mod tests {
         assert_eq!(cfg, loaded);
         assert_eq!(loaded.peers.len(), 1);
         assert_eq!(loaded.peers[0].name, "Linux-Elementary");
+    }
+
+    #[test]
+    fn test_partial_config_fallback_defaults() {
+        let temp_dir = tempfile::tempdir().unwrap();
+        let config_path = temp_dir.path().join("partial_nexa.toml");
+
+        // Simula arquivo com apenas device_name e listen_port definidos
+        let partial_toml = r#"
+device_name = "Meu-PC"
+listen_port = 25800
+"#;
+        std::fs::write(&config_path, partial_toml).unwrap();
+
+        let loaded = AppConfig::load_from_file(&config_path).expect("Deveria carregar com defaults");
+        assert_eq!(loaded.device_name, "Meu-PC");
+        assert_eq!(loaded.listen_port, 25800);
+        assert!(loaded.auto_connect);
+        assert_eq!(loaded.log_level, "info");
+        assert_eq!(loaded.edge_delay_ms, DEFAULT_EDGE_DELAY_MS);
+        assert!(loaded.peers.is_empty());
     }
 }
