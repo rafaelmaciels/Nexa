@@ -103,3 +103,73 @@ fn test_bidirectional_session_engine_simulation() {
     // Host deve restaurar o controle local
     assert_eq!(host_engine.fsm().current_state(), &SessionState::LocalActive);
 }
+
+#[test]
+fn test_mouse_coordinate_clamping_prevents_unbounded_drift() {
+    let win_geo = ScreenGeometry::new(1920, 1080);
+    let mut engine = SessionEngine::new("host", win_geo, 0);
+    engine.topology_mut().register_screen("remote", ScreenGeometry::new(1920, 1080));
+    engine.topology_mut().link_horizontal("host", "remote");
+
+    // Ativa RemoteActive na borda
+    let enter = engine.handle_local_mouse_move_abs(1919, 540).unwrap().unwrap();
+    assert!(matches!(enter, NexaPacket::ScreenEnter(_)));
+    assert!(matches!(engine.fsm().current_state(), SessionState::RemoteActive { .. }));
+
+    // Simula rajada maciça de movimentos rápidos para a direita
+    for _ in 0..100 {
+        let _ = engine.handle_local_mouse_move_rel(500, 0);
+    }
+
+    // virtual_remote_x DEVE estar limitado a 1920.0 (largura da tela remota)
+    assert!(
+        engine.virtual_remote_x() <= 1920.0,
+        "virtual_remote_x ({}) excedeu a largura da tela remota!",
+        engine.virtual_remote_x()
+    );
+}
+
+#[test]
+fn test_queued_absolute_events_ignored_in_remote_mode() {
+    let win_geo = ScreenGeometry::new(1920, 1080);
+    let mut engine = SessionEngine::new("host", win_geo, 0);
+    engine.topology_mut().register_screen("remote", ScreenGeometry::new(1920, 1080));
+    engine.topology_mut().link_horizontal("host", "remote");
+
+    // Ativa RemoteActive
+    let _ = engine.handle_local_mouse_move_abs(1919, 540).unwrap();
+    let initial_rx = engine.virtual_remote_x();
+
+    // Eventos absolutos residuais (ex.: x=1919) enfileirados durante a transição
+    let res = engine.handle_local_mouse_move_abs(1919, 540).unwrap();
+    assert!(res.is_none(), "Evento absoluto não deve gerar pacote em RemoteActive");
+    assert_eq!(
+        engine.virtual_remote_x(),
+        initial_rx,
+        "Coordenada absoluta não pode ser somada como delta relativo!"
+    );
+}
+
+#[test]
+fn test_smooth_return_to_local_without_freeze() {
+    let win_geo = ScreenGeometry::new(1920, 1080);
+    let mut engine = SessionEngine::new("host", win_geo, 0);
+    engine.topology_mut().register_screen("remote", ScreenGeometry::new(1920, 1080));
+    engine.topology_mut().link_horizontal("host", "remote");
+
+    // Ativa RemoteActive
+    let _ = engine.handle_local_mouse_move_abs(1919, 540).unwrap();
+    assert!(matches!(engine.fsm().current_state(), SessionState::RemoteActive { .. }));
+
+    // Usuário move para a esquerda de volta à borda (virtual_remote_x inicia em 10.0)
+    let leave = engine.handle_local_mouse_move_rel(-20, 0).unwrap();
+    assert!(
+        matches!(leave, Some(NexaPacket::ScreenLeave(_))),
+        "Deve retornar ScreenLeave imediatamente ao tocar a borda esquerda"
+    );
+    assert_eq!(
+        engine.fsm().current_state(),
+        &SessionState::LocalActive,
+        "Estado DEVE retornar para LocalActive sem travar ou necessitar de ESC"
+    );
+}

@@ -4,7 +4,7 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
-PKG_VERSION="0.1.0"
+PKG_VERSION="0.1.1"
 PKG_NAME="nexa_${PKG_VERSION}_amd64"
 DIST_DIR="$PROJECT_ROOT/dist/$PKG_NAME"
 

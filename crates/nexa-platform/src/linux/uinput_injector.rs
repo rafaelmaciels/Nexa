@@ -191,20 +191,34 @@ impl LinuxInputInjector {
 }
 
 impl InputInjector for LinuxInputInjector {
-    fn inject_mouse_move(&self, x: i32, y: i32, _is_relative: bool) -> Result<(), NexaError> {
+    fn inject_mouse_move(&self, x: i32, y: i32, is_relative: bool) -> Result<(), NexaError> {
         #[cfg(target_os = "linux")]
         {
-            if x != 0 {
-                self.emit_event(EV_REL, REL_X, x)?;
-            }
-            if y != 0 {
-                self.emit_event(EV_REL, REL_Y, y)?;
+            if is_relative {
+                if x != 0 {
+                    self.emit_event(EV_REL, REL_X, x)?;
+                }
+                if y != 0 {
+                    self.emit_event(EV_REL, REL_Y, y)?;
+                }
+            } else {
+                // Entrada absoluta em compositores Linux (Wayland e X11):
+                // 1. Zera a posição do cursor contra as bordas superiores/esquerdas (0, 0)
+                self.emit_event(EV_REL, REL_X, -65535)?;
+                self.emit_event(EV_REL, REL_Y, -65535)?;
+                // 2. Projeta diretamente na coordenada alvo de entrada, ativando o foco de superfície
+                if x > 0 {
+                    self.emit_event(EV_REL, REL_X, x)?;
+                }
+                if y > 0 {
+                    self.emit_event(EV_REL, REL_Y, y)?;
+                }
             }
             Ok(())
         }
         #[cfg(not(target_os = "linux"))]
         {
-            let _ = (x, y);
+            let _ = (x, y, is_relative);
             Ok(())
         }
     }

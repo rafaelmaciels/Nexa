@@ -299,34 +299,43 @@ impl NexaDaemonService {
                         match receiver.recv_timeout(std::time::Duration::from_millis(15)) {
                             Ok(event) => {
                                 match event {
-                                    CapturedInputEvent::MouseMove { x, y } => {
-                                        let is_remote = matches!(engine.fsm().current_state(), SessionState::RemoteActive { .. });
-                                        if let Ok(Some(pkt)) = engine.handle_local_mouse_move(x, y, is_remote) {
-                                            match engine.fsm().current_state() {
-                                                SessionState::RemoteActive { .. } => {
+                                    CapturedInputEvent::MouseMoveAbsolute { x, y } => {
+                                        // Se o FSM já estiver em RemoteActive, ignora eventos absolutos residuais
+                                        if !matches!(engine.fsm().current_state(), SessionState::RemoteActive { .. }) {
+                                            if let Ok(Some(pkt)) = engine.handle_local_mouse_move_abs(x, y) {
+                                                if matches!(engine.fsm().current_state(), SessionState::RemoteActive { .. }) {
                                                     capturer_worker.set_suppression(true);
-                                                    if matches!(pkt, NexaPacket::ScreenEnter(_)) {
-                                                        info!(">>> [KVM] Cursor cruzou para o Linux! (Pressione ESC a qualquer momento para voltar)");
-                                                        if let Ok(Some(clip_pkt)) = engine.sync_clipboard_on_transition(&clip_mgr) {
-                                                            let _ = tx.try_send(clip_pkt);
-                                                        }
+                                                    // Drena a fila do canal para eliminar resíduos de coordenadas absolutas
+                                                    while receiver.try_recv().is_ok() {}
+                                                    info!(">>> [KVM] Cursor cruzou para a tela remota!");
+                                                    if let Ok(Some(clip_pkt)) = engine.sync_clipboard_on_transition(&clip_mgr) {
+                                                        let _ = tx.try_send(clip_pkt);
                                                     }
                                                 }
-                                                SessionState::LocalActive => {
+                                                let _ = tx.try_send(pkt);
+                                            }
+                                        }
+                                    }
+                                    CapturedInputEvent::MouseMoveRelative { dx, dy } => {
+                                        // Se o FSM não estiver em RemoteActive, ignora deltas relativos
+                                        if matches!(engine.fsm().current_state(), SessionState::RemoteActive { .. }) {
+                                            if let Ok(Some(pkt)) = engine.handle_local_mouse_move_rel(dx, dy) {
+                                                if matches!(engine.fsm().current_state(), SessionState::LocalActive) {
                                                     // Transição de retorno suave para a máquina local (Windows)
                                                     capturer_worker.set_suppression(false);
-                                                    info!("<<< [KVM] Cursor retornou para o Windows!");
+                                                    // Drena quaisquer deltas relativos restantes na fila
+                                                    while receiver.try_recv().is_ok() {}
+                                                    info!("<<< [KVM] Cursor retornou suavemente para o computador local!");
                                                     let (vx, vy, vw, vh) = match screen_mgr.get_screen_bounds() {
                                                         Ok(b) => b,
                                                         Err(_) => (0, 0, 1920, 1080),
                                                     };
-                                                    let return_x = vx + vw - 120;
+                                                    let return_x = vx + vw - 40;
                                                     let return_y = (engine.virtual_remote_y() as i32 + vy).clamp(vy + 50, vy + vh - 50);
                                                     let _ = screen_mgr.set_cursor_position(return_x, return_y);
                                                 }
-                                                _ => {}
+                                                let _ = tx.try_send(pkt);
                                             }
-                                            let _ = tx.try_send(pkt);
                                         }
                                     }
                                     CapturedInputEvent::MouseButton { button, is_down } => {

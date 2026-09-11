@@ -86,23 +86,25 @@ impl SessionEngine {
         self.clipboard_engine.on_remote_clipboard_received(text, clip_mgr)
     }
 
+    pub fn virtual_remote_x(&self) -> f64 {
+        self.virtual_remote_x
+    }
+
     pub fn virtual_remote_y(&self) -> f64 {
         self.virtual_remote_y
     }
 
-    /// Processa movimento físico capturado na máquina local
-    /// Retorna `Some(packet)` quando há evento para despacho remoto (como ScreenEnter ou MouseMove)
-    pub fn handle_local_mouse_move(
+    /// Processa movimento físico absoluto capturado na máquina local (modo LocalActive)
+    pub fn handle_local_mouse_move_abs(
         &mut self,
         x: i32,
         y: i32,
-        is_relative: bool,
     ) -> Result<Option<NexaPacket>, NexaError> {
         match self.fsm.current_state() {
             SessionState::LocalActive | SessionState::EdgeTriggered { .. } => {
                 // Cooldown após retorno para evitar quique acidental ou travamento de borda
                 if let Some(t) = self.last_return_time {
-                    if t.elapsed() < std::time::Duration::from_millis(600) {
+                    if t.elapsed() < std::time::Duration::from_millis(300) {
                         return Ok(None);
                     }
                 }
@@ -132,7 +134,8 @@ impl SessionEngine {
                         let transitioned = self.fsm.on_edge_hit(side, &target_id);
 
                         if transitioned {
-                            self.virtual_remote_x = if side == EdgeSide::Right { 20.0 } else { 1900.0 };
+                            let remote_w = self.topology.get_screen_geometry(&target_id).map(|s| s.width as f64).unwrap_or(1920.0);
+                            self.virtual_remote_x = if side == EdgeSide::Right { 10.0 } else { remote_w - 10.0 };
                             self.virtual_remote_y = (y - top_edge) as f64;
                             self.last_mouse_x = Some(x);
                             self.last_mouse_y = Some(y);
@@ -160,22 +163,34 @@ impl SessionEngine {
                 Ok(None)
             }
             SessionState::RemoteActive { .. } => {
-                let (dx, dy) = if is_relative {
-                    (x, y)
+                // Eventos absolutos recebidos durante RemoteActive são ignorados para prevenir contaminação
+                Ok(None)
+            }
+            SessionState::Disconnected => Ok(None),
+        }
+    }
+
+    /// Processa deslocamento relativo do mouse capturado na máquina local (modo RemoteActive)
+    pub fn handle_local_mouse_move_rel(
+        &mut self,
+        dx: i32,
+        dy: i32,
+    ) -> Result<Option<NexaPacket>, NexaError> {
+        match self.fsm.current_state() {
+            SessionState::RemoteActive { .. } => {
+                let (max_w, max_h) = if let SessionState::RemoteActive { ref active_target } = self.fsm.current_state() {
+                    self.topology.get_screen_geometry(active_target).map(|g| (g.width as f64, g.height as f64)).unwrap_or((1920.0, 1080.0))
                 } else {
-                    let prev_x = self.last_mouse_x.unwrap_or(x);
-                    let prev_y = self.last_mouse_y.unwrap_or(y);
-                    self.last_mouse_x = Some(x);
-                    self.last_mouse_y = Some(y);
-                    (x - prev_x, y - prev_y)
+                    (1920.0, 1080.0)
                 };
 
-                self.virtual_remote_x += dx as f64;
-                self.virtual_remote_y += dy as f64;
+                // CLAMPING ESTRITO: Impede que virtual_remote_x cresça indefinidamente para a direita
+                self.virtual_remote_x = (self.virtual_remote_x + dx as f64).clamp(-10.0, max_w);
+                self.virtual_remote_y = (self.virtual_remote_y + dy as f64).clamp(0.0, max_h);
 
                 // Se o cursor foi movimentado de volta para a esquerda da tela remota (x <= 0),
                 // o controle do mouse e teclado retorna automaticamente para o computador local (Windows)!
-                if self.virtual_remote_x <= 0.0 {
+                if self.virtual_remote_x <= 0.0 && dx < 0 {
                     self.fsm.on_return_to_local();
                     self.last_return_time = Some(std::time::Instant::now());
                     self.last_mouse_x = None;
@@ -191,13 +206,23 @@ impl SessionEngine {
                 };
                 self.coalescer.push(pkt);
 
-                if self.coalescer.should_flush() {
-                    Ok(self.coalescer.flush().map(NexaPacket::MouseMove))
-                } else {
-                    Ok(self.coalescer.flush().map(NexaPacket::MouseMove))
-                }
+                Ok(self.coalescer.flush().map(NexaPacket::MouseMove))
             }
-            SessionState::Disconnected => Ok(None),
+            _ => Ok(None),
+        }
+    }
+
+    /// Processa movimento físico capturado na máquina local (compatibilidade retroativa)
+    pub fn handle_local_mouse_move(
+        &mut self,
+        x: i32,
+        y: i32,
+        is_relative: bool,
+    ) -> Result<Option<NexaPacket>, NexaError> {
+        if is_relative {
+            self.handle_local_mouse_move_rel(x, y)
+        } else {
+            self.handle_local_mouse_move_abs(x, y)
         }
     }
 
@@ -263,6 +288,7 @@ impl SessionEngine {
                 let target_y = ((enter.normalized_y as f64 / 65535.0) * vh as f64).round() as i32;
 
                 screen_mgr.set_cursor_position(target_x, target_y)?;
+                injector.inject_mouse_move(target_x, target_y, false)?;
                 Ok(None)
             }
             NexaPacket::MouseMove(m) => {

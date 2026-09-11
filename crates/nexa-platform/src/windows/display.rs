@@ -9,10 +9,26 @@ use windows_sys::Win32::UI::WindowsAndMessaging::{
     SM_CXVIRTUALSCREEN, SM_CYVIRTUALSCREEN, SM_XVIRTUALSCREEN, SM_YVIRTUALSCREEN,
 };
 
-/// Ativa percepção de DPI (Per-Monitor DPI Aware) para evitar distorção de coordenadas
+/// Ativa percepção de DPI (Per-Monitor DPI Aware V2) para evitar distorção de coordenadas em monitores com escala
 #[cfg(windows)]
 pub fn enable_dpi_awareness() {
     unsafe {
+        // Tenta ativar Per-Monitor V2 DPI awareness dinamicamente (Windows 10 1703+ e Windows 11)
+        let user32 = windows_sys::Win32::System::LibraryLoader::GetModuleHandleA(b"user32.dll\0".as_ptr());
+        if !user32.is_null() {
+            let proc = windows_sys::Win32::System::LibraryLoader::GetProcAddress(
+                user32,
+                b"SetProcessDpiAwarenessContext\0".as_ptr(),
+            );
+            if let Some(set_dpi_context) = proc {
+                type SetDpiContextFn = unsafe extern "system" fn(isize) -> windows_sys::Win32::Foundation::BOOL;
+                let set_dpi: SetDpiContextFn = std::mem::transmute(set_dpi_context);
+                // DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2 = -4
+                if set_dpi(-4) != 0 {
+                    return;
+                }
+            }
+        }
         let _ = SetProcessDPIAware();
     }
 }

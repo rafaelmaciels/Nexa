@@ -4,7 +4,8 @@ use nexa_protocol::{KeyState, MouseButton};
 /// Evento capturado dos periféricos físicos do host de forma unificada
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum CapturedInputEvent {
-    MouseMove { x: i32, y: i32 },
+    MouseMoveAbsolute { x: i32, y: i32 },
+    MouseMoveRelative { dx: i32, dy: i32 },
     MouseButton { button: MouseButton, is_down: bool },
     MouseWheel { delta_x: i16, delta_y: i16 },
     Key { scancode: u16, state: KeyState },

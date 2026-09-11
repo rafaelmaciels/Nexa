@@ -63,6 +63,11 @@ impl ScreenTopology {
         self.screens.insert(id.into(), geometry);
     }
 
+    /// Retorna a geometria de uma tela registrada
+    pub fn get_screen_geometry(&self, id: &str) -> Option<&ScreenGeometry> {
+        self.screens.get(id)
+    }
+
     /// Conecta duas telas bidirecionalmente (ex: tela_a à esquerda de tela_b)
     pub fn link_horizontal(&mut self, left_id: &str, right_id: &str) {
         self.link_directed(left_id, EdgeSide::Right, right_id, EdgeSide::Left);

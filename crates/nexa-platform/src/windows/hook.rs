@@ -22,6 +22,7 @@ static SUPPRESS_INPUT: AtomicBool = AtomicBool::new(false);
 static HOOK_THREAD_ID: AtomicU32 = AtomicU32::new(0);
 static WARP_CENTER_X: AtomicI32 = AtomicI32::new(960);
 static WARP_CENTER_Y: AtomicI32 = AtomicI32::new(540);
+static WARP_PENDING: AtomicBool = AtomicBool::new(false);
 
 // Global sender protegido para o callback C do hook
 static mut EVENT_SENDER: Option<Sender<CapturedInputEvent>> = None;
@@ -55,13 +56,21 @@ unsafe extern "system" fn low_level_mouse_proc(
 
             match msg {
                 WM_MOUSEMOVE => {
+                    if WARP_PENDING.load(Ordering::Relaxed) {
+                        // Descarta eventos transitórios gerados na borda até que o cursor alcance o centro
+                        if (ms.pt.x - cx).abs() <= 2 && (ms.pt.y - cy).abs() <= 2 {
+                            WARP_PENDING.store(false, Ordering::Relaxed);
+                        }
+                        return 1;
+                    }
+
                     let dx = ms.pt.x - cx;
                     let dy = ms.pt.y - cy;
                     if dx != 0 || dy != 0 {
                         // Recentraliza o cursor imediatamente para manter a âncora infinita
                         SetCursorPos(cx, cy);
                         if let Some(ref sender) = EVENT_SENDER {
-                            let _ = sender.try_send(CapturedInputEvent::MouseMove { x: dx, y: dy });
+                            let _ = sender.try_send(CapturedInputEvent::MouseMoveRelative { dx, dy });
                         }
                     }
                 }
@@ -140,7 +149,7 @@ unsafe extern "system" fn low_level_mouse_proc(
             // Modo Local: apenas monitora a posição absoluta do cursor para detecção de borda
             if msg == WM_MOUSEMOVE {
                 if let Some(ref sender) = EVENT_SENDER {
-                    let _ = sender.try_send(CapturedInputEvent::MouseMove {
+                    let _ = sender.try_send(CapturedInputEvent::MouseMoveAbsolute {
                         x: ms.pt.x,
                         y: ms.pt.y,
                     });
@@ -328,12 +337,14 @@ impl InputCapturer for WindowsInputCapturer {
                 let cy = vy + vh / 2;
                 WARP_CENTER_X.store(cx, Ordering::SeqCst);
                 WARP_CENTER_Y.store(cy, Ordering::SeqCst);
+                WARP_PENDING.store(true, Ordering::SeqCst);
                 unsafe {
                     SetCursorPos(cx, cy);
                 }
             }
             SUPPRESS_INPUT.store(true, Ordering::SeqCst);
         } else {
+            WARP_PENDING.store(false, Ordering::SeqCst);
             SUPPRESS_INPUT.store(false, Ordering::SeqCst);
         }
     }
