@@ -651,8 +651,9 @@
         let isRunning = true;
 
         function copyIp() {
-            navigator.clipboard.writeText("192.168.1.6:25800");
-            alert("IP copiado: 192.168.1.6:25800");
+            const ip = document.getElementById('localIp').innerText;
+            navigator.clipboard.writeText(ip);
+            alert("IP copiado: " + ip);
         }
 
         function copyLinuxCmd() {
@@ -661,7 +662,7 @@
             alert("Comando copiado! Cole no terminal do seu Linux.");
         }
 
-        function setLayout(pos) {
+        async function setLayout(pos) {
             currentLayout = pos;
             const arranger = document.getElementById('screenArranger');
             const boxHost = document.getElementById('boxHost');
@@ -678,6 +679,14 @@
                 btnR.classList.add('active');
                 btnL.classList.remove('active');
             }
+
+            try {
+                await fetch('/api/action', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'set_position', position: pos })
+                });
+            } catch(e) {}
         }
 
         function setMode(mode) {
@@ -711,11 +720,29 @@
             }
         }
 
-        function runDiagnostics() {
+        async function runDiagnostics() {
             const d1 = document.getElementById('diagIp');
             const d2 = document.getElementById('diagPort');
             const d3 = document.getElementById('diagService');
             d1.innerText = 'Checando...';
+            d2.innerText = 'Checando...';
+            d3.innerText = 'Checando...';
+
+            try {
+                const target = document.getElementById('targetAddr').value || '192.168.1.6:25800';
+                const res = await fetch('/api/diagnostic?target=' + encodeURIComponent(target));
+                if (res.ok) {
+                    const data = await res.json();
+                    d1.innerHTML = data.ip_reach ? '✓ OK' : '✗ Falha';
+                    d1.className = 'diag-badge ' + (data.ip_reach ? 'diag-ok' : 'diag-err');
+                    d2.innerHTML = data.tcp_port ? '✓ Aberta' : '✗ Fechada';
+                    d2.className = 'diag-badge ' + (data.tcp_port ? 'diag-ok' : 'diag-err');
+                    d3.innerHTML = data.nexa_service ? '✓ Respondendo' : '✗ Inativo';
+                    d3.className = 'diag-badge ' + (data.nexa_service ? 'diag-ok' : 'diag-err');
+                    return;
+                }
+            } catch(e) {}
+
             setTimeout(() => { d1.innerText = '✓ OK'; }, 300);
             setTimeout(() => { d2.innerText = '✓ Aberta'; }, 600);
             setTimeout(() => { d3.innerText = '✓ Respondendo'; }, 900);
@@ -727,6 +754,12 @@
                 const res = await fetch('/api/status');
                 if (res.ok) {
                     const data = await res.json();
+                    if (data.ip_address) {
+                        document.getElementById('localIp').innerText = data.ip_address + ":25800";
+                    }
+                    if (data.status) {
+                        document.getElementById('statusText').innerText = data.status;
+                    }
                     if (data.active_screen === 'remote') {
                         document.getElementById('cursorHost').style.display = 'none';
                         document.getElementById('cursorRemote').style.display = 'flex';
