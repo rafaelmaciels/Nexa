@@ -1,21 +1,20 @@
 /**
- * Nexa — Simulador Interativo de Diagnóstico em Tempo Real
- * Demonstração do funcionamento da verificação em 5 etapas da CLI e da GUI.
+ * Nexa — Simulador de Diagnóstico de Rede e Criptografia
+ * Verificação interativa das 5 etapas essenciais de conectividade local.
  */
 
 document.addEventListener('DOMContentLoaded', () => {
   const btnRunDiag = document.getElementById('btnRunDiagnostic');
-  const diagItems = document.querySelectorAll('.diagnostic-item');
-  const btnToggleService = document.getElementById('btnToggleService');
+  const diagItems = document.querySelectorAll('.tech-step-row.diagnostic-item, .diagnostic-item');
 
   if (!btnRunDiag || diagItems.length === 0) return;
 
   const stepsData = [
-    { label: '✓ OK', class: 'status-check-ok', text: 'Conectividade IP (Rede Local)' },
-    { label: '✓ Aberta', class: 'status-check-ok', text: 'Porta TCP 25800 (Firewall)' },
-    { label: '✓ Respondendo', class: 'status-check-ok', text: 'Serviço Nexa (Daemon Ativo)' },
-    { label: '✓ Seguro', class: 'status-check-ok', text: 'Handshake ChaCha20-Poly1305' },
-    { label: '✓ Ativo', class: 'status-check-ok', text: 'Permissão Linux /dev/uinput' }
+    { label: '✓ OK', text: 'Conectividade IP' },
+    { label: '✓ Aberta', text: 'Porta TCP 25800' },
+    { label: '✓ Respondendo', text: 'Daemon Nexa' },
+    { label: '✓ Cifrado', text: 'Criptografia Curve25519' },
+    { label: '✓ Pronto', text: 'Driver Linux /dev/uinput' }
   ];
 
   let isRunning = false;
@@ -26,63 +25,42 @@ document.addEventListener('DOMContentLoaded', () => {
 
     btnRunDiag.disabled = true;
     btnRunDiag.innerHTML = `
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation: spin 1s linear infinite;">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation: spin 1s linear infinite; margin-right: 6px;">
         <circle cx="12" cy="12" r="10" stroke-opacity="0.25"></circle>
         <path d="M12 2a10 10 0 0 1 10 10"></path>
       </svg>
-      <span>Verificando Rede...</span>
+      <span>Verificando...</span>
     `;
 
-    // Reseta todos os status para pendente
+    // Reseta status para testando
     diagItems.forEach(item => {
-      const statusEl = item.querySelector('.diagnostic-status');
+      const statusEl = item.querySelector('.diagnostic-status, .tech-step-badge');
       if (statusEl) {
-        statusEl.className = 'diagnostic-status';
-        statusEl.innerHTML = '<span style="color: var(--text-dim);">○ Testando...</span>';
+        statusEl.textContent = '○ Verificando...';
+        statusEl.style.color = 'var(--text-muted)';
       }
     });
 
-    // Animação passo a passo (simulando 200ms por etapa)
+    // Simula validação sequencial com micro-delays suaves
     for (let i = 0; i < diagItems.length; i++) {
-      await new Promise(resolve => setTimeout(resolve, 280));
+      await new Promise(resolve => setTimeout(resolve, 220));
       const item = diagItems[i];
-      const statusEl = item.querySelector('.diagnostic-status');
+      const statusEl = item.querySelector('.diagnostic-status, .tech-step-badge');
       const step = stepsData[i];
 
       if (statusEl && step) {
-        statusEl.className = `diagnostic-status ${step.class}`;
         statusEl.textContent = step.label;
+        statusEl.style.color = 'var(--primary)';
       }
     }
 
     btnRunDiag.disabled = false;
-    btnRunDiag.innerHTML = `
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <circle cx="11" cy="11" r="8"></circle>
-        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-      </svg>
-      <span>Testar Conexão</span>
-    `;
+    btnRunDiag.innerHTML = '<span>Executar verificação completa</span>';
     isRunning = false;
   });
-
-  // Botão de parar/iniciar serviço
-  if (btnToggleService) {
-    let serviceActive = true;
-    btnToggleService.addEventListener('click', () => {
-      serviceActive = !serviceActive;
-      if (serviceActive) {
-        btnToggleService.className = 'btn btn-primary';
-        btnToggleService.innerHTML = '<span>⏹ Parar Serviço</span>';
-      } else {
-        btnToggleService.className = 'btn btn-secondary';
-        btnToggleService.innerHTML = '<span>▶ Iniciar Serviço</span>';
-      }
-    });
-  }
 });
 
-// Estilo de rotação para spinner
+// Animação de rotação para o spinner
 const style = document.createElement('style');
 style.textContent = `
   @keyframes spin {

@@ -1,6 +1,6 @@
 /**
- * Nexa — Simulador Interativo do Canvas de Monitores
- * Réplica interativa do layout espacial de telas visto no painel GUI oficial.
+ * Nexa — Simulador Interativo do Visual de Dispositivos (Soft Premium)
+ * Alternância de layout (esquerda/direita) e simulação fluida de movimento do cursor.
  */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -10,7 +10,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const hostScreen = document.getElementById('screenHost');
   const remoteScreen = document.getElementById('screenRemote');
   const transitionBridge = document.getElementById('transitionBridge');
-  const cursorStatusBadge = document.getElementById('cursorStatusBadge');
   const btnSimulateTransition = document.getElementById('btnSimulateTransition');
 
   if (!stage || !btnLeft || !btnRight || !hostScreen || !remoteScreen) return;
@@ -30,10 +29,9 @@ document.addEventListener('DOMContentLoaded', () => {
       stage.appendChild(transitionBridge);
       stage.appendChild(hostScreen);
 
-      // Inverte a direção visual da seta
-      const arrowSvg = transitionBridge.querySelector('svg');
-      if (arrowSvg) {
-        arrowSvg.style.transform = 'rotate(180deg)';
+      const bridgeCursor = transitionBridge.querySelector('.bridge-cursor-anim');
+      if (bridgeCursor) {
+        bridgeCursor.style.transform = 'scaleX(-1)';
       }
     } else {
       btnRight.classList.add('active');
@@ -43,71 +41,62 @@ document.addEventListener('DOMContentLoaded', () => {
       stage.appendChild(transitionBridge);
       stage.appendChild(remoteScreen);
 
-      const arrowSvg = transitionBridge.querySelector('svg');
-      if (arrowSvg) {
-        arrowSvg.style.transform = 'rotate(0deg)';
+      const bridgeCursor = transitionBridge.querySelector('.bridge-cursor-anim');
+      if (bridgeCursor) {
+        bridgeCursor.style.transform = 'scaleX(1)';
       }
     }
   }
 
-  // Eventos de clique nas posições
   btnLeft.addEventListener('click', () => updateMonitorLayout('left'));
   btnRight.addEventListener('click', () => updateMonitorLayout('right'));
 
-  // Função para simular transição do cursor
+  // Função para simular transição do cursor entre as telas
   function setCursorActiveState(remote) {
     isRemoteActive = remote;
 
-    const hostStatus = hostScreen.querySelector('.screen-status-indicator');
-    const remoteStatus = remoteScreen.querySelector('.screen-status-indicator');
+    const hostStateText = hostScreen.querySelector('.device-state-text');
+    const remoteStateText = remoteScreen.querySelector('.device-state-text');
+    const hostPill = hostScreen.querySelector('.device-status-pill');
+    const remotePill = remoteScreen.querySelector('.device-status-pill');
 
     if (remote) {
       // Cursor no Linux
-      hostScreen.classList.remove('active-screen');
-      remoteScreen.classList.add('active-screen');
+      hostScreen.classList.remove('active-device');
+      remoteScreen.classList.add('active-device');
 
-      if (hostStatus) {
-        hostStatus.className = 'screen-status-indicator status-passive';
-        hostStatus.innerHTML = '<span>○ Cursor Remoto</span>';
+      if (hostPill && hostStateText) {
+        hostPill.style.background = 'var(--bg-subtle)';
+        hostPill.style.color = 'var(--text-secondary)';
+        hostStateText.textContent = 'Aguardando cursor';
       }
-      if (remoteStatus) {
-        remoteStatus.className = 'screen-status-indicator status-active';
-        remoteStatus.innerHTML = '<span class="status-dot"></span><span>● Controlando Linux</span>';
-      }
-
-      if (cursorStatusBadge) {
-        cursorStatusBadge.style.color = '#c084fc';
-        cursorStatusBadge.style.borderColor = 'rgba(192, 132, 252, 0.4)';
-        cursorStatusBadge.style.background = 'rgba(192, 132, 252, 0.12)';
-        cursorStatusBadge.innerHTML = '<span class="pulse-dot" style="background:#c084fc;box-shadow:0 0 10px #c084fc;"></span> Cursor Ativo: Linux Laptop (Remoto)';
+      if (remotePill && remoteStateText) {
+        remotePill.style.background = 'var(--primary-light)';
+        remotePill.style.color = 'var(--primary)';
+        remoteStateText.textContent = 'Cursor ativo no Linux';
       }
 
       if (btnSimulateTransition) {
-        btnSimulateTransition.innerHTML = '<span>🔙 Pressione Esc para Retornar</span>';
+        btnSimulateTransition.innerHTML = '<span>Retornar cursor ao Windows</span>';
       }
     } else {
       // Cursor no Windows (Host)
-      remoteScreen.classList.remove('active-screen');
-      hostScreen.classList.add('active-screen');
+      remoteScreen.classList.remove('active-device');
+      hostScreen.classList.add('active-device');
 
-      if (hostStatus) {
-        hostStatus.className = 'screen-status-indicator status-active';
-        hostStatus.innerHTML = '<span class="status-dot"></span><span>● Cursor Local Ativo</span>';
+      if (hostPill && hostStateText) {
+        hostPill.style.background = 'var(--primary-light)';
+        hostPill.style.color = 'var(--primary)';
+        hostStateText.textContent = 'Mouse e teclado ativos aqui';
       }
-      if (remoteStatus) {
-        remoteStatus.className = 'screen-status-indicator status-passive';
-        remoteStatus.innerHTML = '<span>○ Controlado pela rede local</span>';
-      }
-
-      if (cursorStatusBadge) {
-        cursorStatusBadge.style.color = '#34d399';
-        cursorStatusBadge.style.borderColor = 'rgba(16, 185, 129, 0.3)';
-        cursorStatusBadge.style.background = 'rgba(16, 185, 129, 0.12)';
-        cursorStatusBadge.innerHTML = '<span class="pulse-dot"></span> Cursor Ativo: Windows (Host)';
+      if (remotePill && remoteStateText) {
+        remotePill.style.background = 'var(--bg-subtle)';
+        remotePill.style.color = 'var(--text-secondary)';
+        remoteStateText.textContent = 'Pronto para receber o cursor';
       }
 
       if (btnSimulateTransition) {
-        btnSimulateTransition.innerHTML = '<span>✨ Simular Transição de Borda</span>';
+        btnSimulateTransition.innerHTML = '<span>Simular movimento entre telas</span>';
       }
     }
   }
@@ -118,7 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Tecla de Emergência Esc ou Scroll Lock
+  // Tecla de Emergência Esc ou Scroll Lock para devolver o foco
   window.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' || e.key === 'ScrollLock') {
       if (isRemoteActive) {

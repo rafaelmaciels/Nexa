@@ -4,147 +4,91 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <!-- SEO On-Page Primário & Desambiguação de Entidade -->
-  <title>Nexa — Compartilhamento de Mouse, Teclado e Clipboard em Rede Local (KVM Rust)</title>
-  <meta name="description" content="Software KVM de alta performance desenvolvido em Rust. Controle múltiplos computadores (Windows 11 e Linux) com um único mouse e teclado através da rede local, com criptografia ChaCha20-Poly1305 ponta a ponta e zero nuvem.">
-  <meta name="keywords" content="Nexa KVM, Nexa software, KVM por software, compartilhar mouse e teclado, controlar Linux pelo Windows, KVM Rust, alternar monitor rede local, Synergy alternativa, Barrier alternativa, Deskflow, Wayland KVM">
+  <!-- SEO On-Page Primário -->
+  <title>Nexa — Seu teclado e mouse. Em qualquer computador.</title>
+  <meta name="description" content="Conecte Windows e Linux pela rede local e trabalhe entre suas telas com a simplicidade de um único computador. Software KVM seguro, sem nuvem e de alta performance.">
+  <meta name="keywords" content="Nexa, KVM software, compartilhar mouse e teclado, Windows e Linux, rede local, Synergy alternativa, Barrier, Deskflow, produtividade multi-monitor">
   <meta name="author" content="Nexa Contributors">
-  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
-  <link rel="canonical" href="https://nexa.github.io/">
-  <link rel="alternate" hreflang="pt-BR" href="https://nexa.github.io/">
-  <link rel="alternate" hreflang="x-default" href="https://nexa.github.io/">
-
-  <!-- Google Search Console Verification Placeholder -->
-  <!-- <meta name="google-site-verification" content="SEU_CODIGO_DE_VERIFICACAO_AQUI" /> -->
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <link rel="canonical" href="https://rafaelmaciels.github.io/Nexa/">
   
-  <!-- OpenGraph / Facebook / WhatsApp / Discord -->
+  <!-- OpenGraph / Redes Sociais -->
   <meta property="og:locale" content="pt_BR">
   <meta property="og:type" content="website">
-  <meta property="og:site_name" content="Nexa KVM Share">
-  <meta property="og:title" content="Nexa — Controle Múltiplos Computadores com um Único Mouse e Teclado">
-  <meta property="og:description" content="Software KVM em Rust de alta precisão. Mova o cursor entre telas encostando na borda do monitor com criptografia de hardware ChaCha20-Poly1305.">
-  <meta property="og:url" content="https://nexa.github.io/">
-  <meta property="og:image" content="https://nexa.github.io/assets/brand/nexa-logo-dark.png">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="Logotipo e Interface do Nexa KVM Share">
+  <meta property="og:site_name" content="Nexa">
+  <meta property="og:title" content="Nexa — Seu teclado e mouse. Em qualquer computador.">
+  <meta property="og:description" content="Conecte Windows e Linux pela rede local e trabalhe entre suas telas com a simplicidade de um único computador.">
+  <meta property="og:url" content="https://rafaelmaciels.github.io/Nexa/">
+  <meta property="og:image" content="./assets/brand/nexa-logo-dark.png">
   
-  <!-- Twitter / X Cards -->
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Nexa — Compartilhamento de Mouse, Teclado e Clipboard em Rust">
-  <meta name="twitter:description" content="KVM virtual por software para Windows 11 e Linux Wayland. Zero latência, 100% rede local.">
-  <meta name="twitter:image" content="https://nexa.github.io/assets/brand/nexa-logo-dark.png">
-
-  <!-- Favicons e Ícones Oficiais de Marca -->
+  <!-- Favicons Oficiais -->
   <link rel="icon" type="image/png" sizes="32x32" href="./assets/brand/nexa-icon-32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="./assets/brand/nexa-icon-16.png">
   <link rel="apple-touch-icon" sizes="180x180" href="./assets/brand/nexa-icon-256.png">
 
-  <!-- Otimização de Fontes e Renderização -->
+  <!-- Tipografia Moderna (Plus Jakarta Sans & Inter) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 
-  <!-- Estilos Estruturados -->
+  <!-- Estilos Soft Premium -->
   <link rel="stylesheet" href="./assets/css/style.css">
   <link rel="stylesheet" href="./assets/css/components.css">
 
-  <!-- Dados Estruturados Schema.org (JSON-LD) para SEO Semântico & Knowledge Graph -->
+  <!-- Schema.org JSON-LD -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "WebSite",
-        "@id": "https://nexa.github.io/#website",
-        "url": "https://nexa.github.io/",
-        "name": "Nexa KVM Share",
-        "description": "Software open-source de compartilhamento de mouse, teclado e clipboard em rede local desenvolvido em Rust.",
-        "publisher": {
-          "@id": "https://nexa.github.io/#organization"
-        },
-        "inLanguage": "pt-BR"
-      },
-      {
-        "@type": "Organization",
-        "@id": "https://nexa.github.io/#organization",
-        "name": "Nexa Project",
-        "url": "https://nexa.github.io/",
-        "logo": {
-          "@type": "ImageObject",
-          "url": "https://nexa.github.io/assets/brand/nexa-logo-dark.png",
-          "width": "512",
-          "height": "512"
-        },
-        "sameAs": [
-          "https://github.com/rafaelmaciels/Nexa"
-        ]
-      },
-      {
-        "@type": "SoftwareApplication",
-        "@id": "https://nexa.github.io/#software",
-        "name": "Nexa",
-        "operatingSystem": "Windows 11, Windows 10 x64, Linux (elementary OS 8.1 Wayland, Ubuntu 22.04+, Debian 12+)",
-        "applicationCategory": "DeveloperApplication",
-        "applicationSubCategory": "KVM Software / Remote Peripheral Sharing",
-        "softwareVersion": "0.1.0",
-        "license": "https://opensource.org/licenses/MIT",
-        "description": "Permite controlar múltiplos computadores na mesma mesa com um único mouse e teclado através da rede local, com conversão geométrica 2D e criptografia ChaCha20-Poly1305.",
-        "offers": {
-          "@type": "Offer",
-          "price": "0.00",
-          "priceCurrency": "USD"
-        },
-        "featureList": [
-          "Transição fluida entre monitores ao tocar a borda da tela",
-          "Criptografia de ponta a ponta com ChaCha20-Poly1305 e confirmação SAS PIN",
-          "Sincronização de área de transferência UTF-8 com algoritmo Anti-Echo SHA-256",
-          "Coalescência adaptativa para mouses gamers de 1000Hz",
-          "Suporte nativo a Wayland via /dev/uinput e Windows 11 com Low-Level Hooks"
-        ]
-      }
-    ]
+    "@type": "SoftwareApplication",
+    "name": "Nexa",
+    "operatingSystem": "Windows 11, Windows 10, Linux (elementary OS, Ubuntu, Debian, Fedora)",
+    "applicationCategory": "UtilitiesApplication",
+    "description": "Compartilhamento suave de teclado e mouse entre computadores Windows e Linux via rede local.",
+    "offers": {
+      "@type": "Offer",
+      "price": "0.00",
+      "priceCurrency": "USD"
+    }
   }
   </script>
 </head>
 <body>
 
-  <!-- Brilho ambiental sutil de fundo -->
-  <div class="ambient-glow"></div>
-
-  <!-- Header / Barra de Navegação -->
+  <!-- ========================================================================
+       1. HEADER — Extremamente Limpo e Refinado
+       ======================================================================== -->
   <header class="site-header">
     <div class="container header-inner">
       <a href="./" class="brand-wrapper" title="Nexa — Página Inicial">
-        <img src="./assets/brand/nexa-icon-64.png" alt="Nexa Logo" class="brand-logo-img" width="34" height="34">
+        <img src="./assets/brand/nexa-icon-64.png" alt="Nexa Logo" class="brand-logo-img" width="30" height="30">
         <div class="brand-title-box">
           <span class="brand-name">Nexa</span>
-          <span class="brand-tag">KVM Share</span>
         </div>
       </a>
 
-      <!-- Menu de Navegação Semântico com Links Internos de SEO -->
+      <!-- Links Discretos de Navegação -->
       <nav aria-label="Navegação Principal">
         <ul class="nav-menu">
-          <li><a href="./" class="nav-link active">Início</a></li>
-          <li><a href="./como-funciona/" class="nav-link">Como Funciona</a></li>
-          <li><a href="./recursos/" class="nav-link">Recursos</a></li>
-          <li><a href="./instalacao/" class="nav-link">Instalação</a></li>
-          <li><a href="./seguranca/" class="nav-link">Segurança</a></li>
+          <li><a href="#como-funciona" class="nav-link">Como funciona</a></li>
+          <li><a href="#recursos" class="nav-link">Recursos</a></li>
+          <li><a href="#ajuda" class="nav-link">Ajuda</a></li>
           <li><a href="./documentacao/" class="nav-link">Documentação</a></li>
-          <li><a href="./solucao-de-problemas/" class="nav-link">Ajuda</a></li>
-          <li><a href="./roadmap/" class="nav-link">Roadmap</a></li>
         </ul>
       </nav>
 
-      <!-- Ações do Header -->
+      <!-- Indicador de Estado Elegante e Link GitHub -->
       <div class="header-actions">
-        <a href="https://github.com/rafaelmaciels/Nexa" target="_blank" rel="noopener noreferrer" class="btn-github" title="Ver código-fonte do Nexa no GitHub">
+        <div id="headerStatusPill" class="system-status-indicator" title="Estado do Sistema na Rede Local">
+          <span class="status-beacon"></span>
+          <span id="headerStatusText">Pronto para conectar</span>
+        </div>
+
+        <a href="https://github.com/rafaelmaciels/Nexa" target="_blank" rel="noopener noreferrer" class="btn-header-github" title="Repositório no GitHub">
           <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
             <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
           </svg>
-          <span>GitHub</span>
         </a>
+
         <button class="btn-mobile-toggle" aria-label="Abrir Menu">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <line x1="3" y1="12" x2="21" y2="12"></line>
@@ -156,368 +100,406 @@
     </div>
   </header>
 
-  <!-- Conteúdo Principal -->
+  <!-- ========================================================================
+       CONTEÚDO PRINCIPAL
+       ======================================================================== -->
   <main>
-    
-    <!-- Hero Section -->
+
+    <!-- ======================================================================
+         2. HERO — Apresentação Comercial, Limpa e Confortável
+         ====================================================================== -->
     <section class="hero-section">
       <div class="container hero-content">
-        <div class="hero-badge-pill">
-          <span class="pulse-dot"></span>
-          <span>Projeto Open-Source em Rust 2021 • 100% Rede Local • Sem Servidores na Nuvem</span>
+        <div class="hero-pill">
+          <span class="hero-pill-icon"></span>
+          <span>Software de controle suave de múltiplos computadores</span>
         </div>
 
         <h1 class="hero-title">
-          Controle múltiplos computadores com <span class="gradient-text">um único mouse e teclado</span>.
+          Seu teclado e mouse.<br>Em qualquer computador.
         </h1>
 
         <p class="hero-subtitle">
-          Posicione seu PC Windows e seu Laptop Linux lado a lado na mesa. Ao encostar o cursor na borda do monitor, você entra suavemente na outra máquina através da sua rede local — sem switches de hardware e com latência imperceptível.
+          Conecte Windows e Linux pela rede local e trabalhe entre suas telas com a simplicidade de um único computador.
         </p>
 
-        <div class="hero-actions">
-          <a href="./instalacao/" class="btn btn-primary">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-              <polyline points="7 10 12 15 17 10"></polyline>
-              <line x1="12" y1="15" x2="12" y2="3"></line>
+        <div class="hero-cta-group">
+          <a href="#conectar" class="btn btn-primary">
+            <span>Começar agora</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
             </svg>
-            <span>Guia de Instalação</span>
           </a>
-          <a href="./como-funciona/" class="btn btn-secondary">
-            <span>Entenda Como Funciona</span>
-          </a>
-          <a href="./documentacao/" class="btn btn-outline">
-            <span>Documentação Técnica</span>
+          <a href="#como-funciona" class="btn btn-secondary">
+            <span>Como funciona</span>
           </a>
         </div>
 
-        <div class="hero-meta-badges">
-          <div class="hero-meta-item">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
-              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-            </svg>
-            <span>ChaCha20-Poly1305 + PIN SAS</span>
-          </div>
-          <div class="hero-meta-item">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
-              <circle cx="12" cy="12" r="10"></circle>
-              <polyline points="12 6 12 12 14 14"></polyline>
-            </svg>
-            <span>Latência sub-milissegundo</span>
-          </div>
-          <div class="hero-meta-item">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
-              <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
-            </svg>
-            <span>Coalescência Mouse 1000Hz</span>
-          </div>
+        <div class="hero-trust-info">
+          <span>Seguro</span>
+          <span class="hero-trust-dot">•</span>
+          <span>Rede local</span>
+          <span class="hero-trust-dot">•</span>
+          <span>Sem complicação</span>
         </div>
       </div>
 
-      <!-- Demonstração Interativa do Painel Gráfico Oficial -->
+      <!-- ====================================================================
+           3. VISUAL PRINCIPAL DO PRODUTO (Hero Product Showcase)
+           Windows PC → Conexão Suave → Linux Laptop com Cursor Atravessando
+           ==================================================================== -->
+      <div class="container product-showcase-container">
+        <div class="product-showcase-card">
+          
+          <div id="screensStage" class="showcase-stage">
+            
+            <!-- Dispositivo 1: Windows PC (Host) -->
+            <div id="screenHost" class="device-frame active-device">
+              <div class="device-topbar">
+                <div class="device-badge-name">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="2" y="3" width="20" height="14" rx="2"></rect>
+                    <line x1="8" y1="21" x2="16" y2="21"></line>
+                    <line x1="12" y1="17" x2="12" y2="21"></line>
+                  </svg>
+                  <span>Windows PC</span>
+                </div>
+                <span class="device-os-tag">Este computador</span>
+              </div>
+              <div class="device-screen-canvas">
+                <div class="device-status-pill">
+                  <span class="status-dot-active"></span>
+                  <span class="device-state-text">Mouse e teclado ativos aqui</span>
+                </div>
+                <div class="device-caption">
+                  Mova o cursor para a direita para alternar
+                </div>
+              </div>
+            </div>
+
+            <!-- Conexão Suave Central com Cursor Animado -->
+            <div id="transitionBridge" class="showcase-bridge">
+              <span class="bridge-caption">Conexão ativa</span>
+              <div class="bridge-line-wrap">
+                <div class="bridge-flow-pulse"></div>
+                <!-- Cursor animado sutil atravessando -->
+                <svg class="bridge-cursor-anim" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M4 2l16 11-7.5 1.5L9 22l-5-20z"/>
+                </svg>
+              </div>
+            </div>
+
+            <!-- Dispositivo 2: Linux Laptop (Guest) -->
+            <div id="screenRemote" class="device-frame">
+              <div class="device-topbar">
+                <div class="device-badge-name">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="4" width="18" height="12" rx="2"></rect>
+                    <path d="M2 20h20"></path>
+                  </svg>
+                  <span>Linux Laptop</span>
+                </div>
+                <span class="device-os-tag">Outro computador</span>
+              </div>
+              <div class="device-screen-canvas">
+                <div class="device-status-pill" style="background: var(--bg-subtle); color: var(--text-secondary);">
+                  <span class="status-dot-muted"></span>
+                  <span class="device-state-text">Pronto para receber o cursor</span>
+                </div>
+                <div class="device-caption">
+                  elementary OS / Ubuntu via rede local
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Controles de Disposição Suaves -->
+          <div class="showcase-footer-controls">
+            <button id="btnPositionLeft" class="btn-position-pill" aria-label="Posicionar Linux à esquerda">
+              <span>◄ Linux à esquerda</span>
+            </button>
+            <button id="btnPositionRight" class="btn-position-pill active" aria-label="Posicionar Linux à direita">
+              <span>Linux à direita ►</span>
+            </button>
+            <button id="btnSimulateTransition" class="btn-position-pill" style="font-weight: 600; color: var(--primary); border-color: var(--primary-light-border);">
+              <span>Simular movimento entre telas</span>
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         4. CONFIGURAÇÃO / CONEXÃO INTERATIVA & DIAGNÓSTICO
+         ====================================================================== -->
+    <section id="conectar" class="section-tight">
       <div class="container">
         
-        <!-- Banner de Atalho de Emergência KVM -->
-        <div class="alert-emergency">
-          <div class="alert-emergency-content">
-            <div class="alert-emergency-icon">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <rect x="2" y="4" width="20" height="16" rx="2"></rect>
-                <line x1="6" y1="8" x2="6" y2="8"></line>
-                <line x1="10" y1="8" x2="10" y2="8"></line>
-                <line x1="14" y1="8" x2="14" y2="8"></line>
-                <line x1="18" y1="8" x2="18" y2="8"></line>
-              </svg>
-            </div>
-            <div>
-              <strong>Atalho de Emergência KVM:</strong> Se o cursor estiver na tela remota e você quiser soltá-lo imediatamente, pressione <span class="kbd-badge">Esc</span> ou <span class="kbd-badge">Scroll Lock</span>.
-            </div>
+        <!-- Aviso Discreto de Atalho KVM -->
+        <div class="shortcut-notice-bar">
+          <div>
+            <strong>Dica de uso:</strong> Quando o mouse estiver no outro computador, basta mover para a borda ou pressionar <span class="shortcut-kbd">Esc</span> para retornar instantaneamente.
           </div>
-          <a href="./solucao-de-problemas/" style="font-size: 0.82rem; color: #fca5a5; text-decoration: underline;">Ver atalhos</a>
+          <span style="font-size: 0.8125rem; color: var(--text-muted);">Retorno automático</span>
         </div>
 
-        <!-- Canvas Espacial de Monitores (Interativo) -->
-        <div class="canvas-card">
-          <div class="canvas-header">
-            <div>
-              <div class="canvas-title">
-                <span>Disposição Espacial dos Monitores</span>
-              </div>
-              <div class="canvas-subtitle">
-                Mova o mouse em direção à borda para entrar suavemente no Linux. Alterne a posição conforme seus monitores físicos na mesa.
-              </div>
-            </div>
-            <div id="cursorStatusBadge" class="cursor-status-badge">
-              <span class="pulse-dot"></span>
-              <span>Cursor Ativo: Windows (Host)</span>
-            </div>
-          </div>
-
-          <!-- Palco dos computadores -->
-          <div id="screensStage" class="screens-stage">
-            
-            <div id="screenHost" class="screen-card active-screen">
-              <div class="screen-card-header">
-                <div class="screen-name">
-                  <span>💻 Windows PC</span>
-                </div>
-                <span class="screen-role-tag tag-host">HOST (FÍSICO)</span>
-              </div>
-              <div class="screen-status-indicator status-active">
-                <span class="status-dot"></span>
-                <span>Cursor Local Ativo</span>
-              </div>
-              <div class="screen-desc">
-                Teclado e mouse físicos conectados nesta máquina.
-              </div>
-            </div>
-
-            <div id="transitionBridge" class="transition-bridge">
-              <span class="transition-label">Transição Livre</span>
-              <div class="transition-arrow">
-                <svg viewBox="0 0 24 24">
-                  <path d="M5 12h14M13 5l7 7-7 7"/>
-                </svg>
-              </div>
-            </div>
-
-            <div id="screenRemote" class="screen-card">
-              <div class="screen-card-header">
-                <div class="screen-name">
-                  <span>🐧 Linux Laptop</span>
-                </div>
-                <span class="screen-role-tag tag-guest">GUEST (REMOTA)</span>
-              </div>
-              <div class="screen-status-indicator status-passive">
-                <span>○ Controlado pela rede local</span>
-              </div>
-              <div class="screen-desc">
-                 elementary OS 8.1 Wayland via emulação <code>/dev/uinput</code>.
-              </div>
-            </div>
-
-          </div>
-
-          <!-- Controles do Canvas -->
-          <div class="canvas-controls">
-            <button id="btnPositionLeft" class="btn-position-toggle" aria-label="Mover Linux para a esquerda">
-              <span>◄ Linux à Esquerda</span>
-            </button>
-            <button id="btnPositionRight" class="btn-position-toggle active" aria-label="Mover Linux para a direita">
-              <span>Linux à Direita ►</span>
-            </button>
-            <button id="btnSimulateTransition" class="btn btn-outline" style="margin-left: 12px;">
-              <span>✨ Simular Transição de Borda</span>
-            </button>
-          </div>
-        </div>
-
-        <!-- Grid de Controle do Nexa e Diagnóstico em Tempo Real -->
-        <div class="dual-panel-grid">
+        <div class="interactive-flow-grid">
           
-          <div class="panel-card">
-            <div class="panel-title">Controle do Nexa</div>
-            <div class="panel-subtitle">Inicie como Servidor neste computador ou conecte a outro dispositivo.</div>
+          <!-- Painel de Conexão em 3 Passos Simples -->
+          <div class="flow-card">
+            <h2 class="flow-card-title">Conectar um computador</h2>
+            <p class="flow-card-desc">Defina o papel desta máquina e estabeleça a conexão pela sua rede local.</p>
 
-            <div class="mode-selector-box">
-              <span class="mode-label">Modo de Funcionamento:</span>
-              <div class="mode-buttons-group">
-                <button class="btn-mode-select active">
-                  <span>💻 Servidor (Host)</span>
+            <!-- Passo 1: Escolha o modo -->
+            <div class="flow-step-block">
+              <label class="flow-step-label">1. Escolha o modo</label>
+              <div class="mode-toggle-group">
+                <button id="btnModeServer" class="btn-mode-pill active">
+                  <span>Este computador (Teclado/Mouse)</span>
                 </button>
-                <button class="btn-mode-select">
-                  <span>💻 Cliente (Guest)</span>
+                <button id="btnModeClient" class="btn-mode-pill">
+                  <span>Outro computador (Receptor)</span>
                 </button>
               </div>
             </div>
 
-            <div class="panel-actions-group">
-              <button id="btnToggleService" class="btn btn-primary" style="flex: 1;">
-                <span>⏹ Parar Serviço</span>
-              </button>
-              <button id="btnRunDiagnostic" class="btn btn-secondary" style="flex: 1;">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <circle cx="11" cy="11" r="8"></circle>
-                  <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                </svg>
-                <span>Testar Conexão</span>
+            <!-- Passo 2: Endereço do computador -->
+            <div class="flow-step-block">
+              <label class="flow-step-label">2. Endereço do computador</label>
+              <div class="input-ip-group">
+                <input type="text" id="inputTargetIp" class="input-ip-field" value="192.168.1.6:25800" placeholder="IP do computador (ex: 192.168.1.50)">
+                <button id="btnCopyIp" class="btn-copy-ip btn-copy" data-clipboard-text="192.168.1.6:25800" title="Copiar IP Local">
+                  Copiar IP
+                </button>
+              </div>
+            </div>
+
+            <!-- Passo 3: Conectar -->
+            <div class="flow-step-block" style="margin-bottom: 0;">
+              <label class="flow-step-label">3. Conectar</label>
+              <button id="btnConnectMain" class="btn-connect-main">
+                <span>Conectar ao Nexa</span>
               </button>
             </div>
           </div>
 
-          <div class="panel-card">
-            <div class="panel-title">Diagnóstico em Tempo Real</div>
-            <div class="panel-subtitle">Verificação instantânea de rede e comunicação criptográfica.</div>
+          <!-- 5. DIAGNÓSTICO SIMPLIFICADO ("Tudo funcionando") -->
+          <div class="flow-card">
+            <h2 class="flow-card-title">Tudo funcionando</h2>
+            <p class="flow-card-desc">Sua rede local está pronta e a comunicação protegida.</p>
 
-            <div class="diagnostic-list">
-              <div class="diagnostic-item">
-                <div class="diagnostic-name">
-                  <span class="diagnostic-step-num">1.</span>
-                  <span>Conectividade IP (Rede Local)</span>
+            <div class="status-summary-list">
+              <div class="status-summary-item">
+                <div class="status-item-left">
+                  <span class="status-dot-green"></span>
+                  <span class="status-item-name">Rede local</span>
                 </div>
-                <div class="diagnostic-status status-check-ok">✓ OK</div>
+                <span class="status-item-state">Conectada</span>
               </div>
 
-              <div class="diagnostic-item">
-                <div class="diagnostic-name">
-                  <span class="diagnostic-step-num">2.</span>
-                  <span>Porta TCP 25800 (Firewall)</span>
+              <div class="status-summary-item">
+                <div class="status-item-left">
+                  <span class="status-dot-green"></span>
+                  <span class="status-item-name">Serviço Nexa</span>
                 </div>
-                <div class="diagnostic-status status-check-ok">✓ Aberta</div>
+                <span id="serviceStatusBadge" class="status-item-state">Ativo</span>
               </div>
 
-              <div class="diagnostic-item">
-                <div class="diagnostic-name">
-                  <span class="diagnostic-step-num">3.</span>
-                  <span>Serviço Nexa (Daemon Ativo)</span>
+              <div class="status-summary-item">
+                <div class="status-item-left">
+                  <span class="status-dot-green"></span>
+                  <span class="status-item-name">Comunicação</span>
                 </div>
-                <div class="diagnostic-status status-check-ok">✓ Respondendo</div>
-              </div>
-
-              <div class="diagnostic-item">
-                <div class="diagnostic-name">
-                  <span class="diagnostic-step-num">4.</span>
-                  <span>Handshake ChaCha20-Poly1305</span>
-                </div>
-                <div class="diagnostic-status status-check-ok">✓ Seguro</div>
-              </div>
-
-              <div class="diagnostic-item">
-                <div class="diagnostic-name">
-                  <span class="diagnostic-step-num">5.</span>
-                  <span>Permissão Linux /dev/uinput</span>
-                </div>
-                <div class="diagnostic-status status-check-ok">✓ Ativo</div>
+                <span class="status-item-state">Segura</span>
               </div>
             </div>
+
+            <!-- Detalhes Técnicos Sob Demanda -->
+            <div>
+              <button id="btnToggleTechDetails" class="btn-toggle-tech-details" aria-expanded="false">
+                <span>Ver detalhes técnicos</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+
+              <div id="techDetailsDrawer" class="tech-details-drawer">
+                <div class="tech-step-row diagnostic-item">
+                  <span>Conectividade IP</span>
+                  <span class="tech-step-badge diagnostic-status">✓ OK</span>
+                </div>
+                <div class="tech-step-row diagnostic-item">
+                  <span>Porta TCP 25800</span>
+                  <span class="tech-step-badge diagnostic-status">✓ Aberta</span>
+                </div>
+                <div class="tech-step-row diagnostic-item">
+                  <span>Daemon Nexa</span>
+                  <span class="tech-step-badge diagnostic-status">✓ Respondendo</span>
+                </div>
+                <div class="tech-step-row diagnostic-item">
+                  <span>Criptografia Curve25519</span>
+                  <span class="tech-step-badge diagnostic-status">✓ Cifrado</span>
+                </div>
+                <div class="tech-step-row diagnostic-item">
+                  <span>Driver Linux /dev/uinput</span>
+                  <span class="tech-step-badge diagnostic-status">✓ Pronto</span>
+                </div>
+
+                <div style="margin-top: 14px;">
+                  <button id="btnRunDiagnostic" class="btn btn-secondary" style="height: 38px; font-size: 0.8125rem; width: 100%;">
+                    <span>Executar verificação completa</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
           </div>
 
         </div>
 
-        <!-- Card Solução Definitiva para o Linux (/dev/uinput) -->
-        <div class="uinput-card">
-          <div class="uinput-header">
-            <span>🐧 Solução Definitiva para o Linux (/dev/uinput)</span>
-          </div>
-          <div class="uinput-desc">
-            No Linux, o sistema operacional exige permissão de acesso ao driver do kernel <code>/dev/uinput</code> para mover o mouse e simular teclas sem exigir permissões de root. Execute este comando único no terminal:
-          </div>
-          <div class="code-box">
-            <span class="code-snippet">sudo modprobe uinput && sudo chmod 666 /dev/uinput && sudo usermod -aG input $USER</span>
-            <button class="btn-copy-code" data-clipboard-text="sudo modprobe uinput && sudo chmod 666 /dev/uinput && sudo usermod -aG input $USER">
+        <!-- ====================================================================
+             6. PERMISSÕES LINUX (Configuração Elegante Sob Demanda)
+             ==================================================================== -->
+        <div id="ajuda" class="linux-setup-card">
+          <div class="linux-setup-header">
+            <div>
+              <h3 class="linux-setup-title">Precisa configurar o Linux?</h3>
+              <p class="linux-setup-desc">Em algumas distribuições, o Nexa precisa de uma permissão adicional para controlar teclado e mouse.</p>
+            </div>
+            <button id="btnShowLinuxConfig" class="btn-show-config" aria-expanded="false">
+              <span>Mostrar configuração</span>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                <polyline points="6 9 12 15 18 9"></polyline>
               </svg>
-              <span>Copiar Comando</span>
             </button>
+          </div>
+
+          <div id="linuxConfigDrawer" class="linux-config-drawer">
+            <p style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 12px;">
+              Execute o comando abaixo no terminal da máquina Linux para liberar o acesso ao driver de entrada virtual:
+            </p>
+            <div class="terminal-box">
+              <span class="terminal-code">sudo modprobe uinput && sudo chmod 666 /dev/uinput && sudo usermod -aG input $USER</span>
+              <button class="btn-copy-terminal btn-copy-code" data-clipboard-text="sudo modprobe uinput && sudo chmod 666 /dev/uinput && sudo usermod -aG input $USER">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                </svg>
+                <span>Copiar comando</span>
+              </button>
+            </div>
           </div>
         </div>
 
       </div>
     </section>
 
-    <!-- Seção de Solução do Problema (SEO de Intenção Informacional e Comparativo) -->
-    <section class="section">
+    <!-- ======================================================================
+         7. SEÇÃO "COMO FUNCIONA" — 3 Passos Simples
+         ====================================================================== -->
+    <section id="como-funciona" class="section">
       <div class="container">
         <div class="section-header">
-          <span class="section-tag">Problema e Solução</span>
-          <h2 class="section-title">Por que usar o Nexa em vez de KVM físico ou softwares legados?</h2>
-          <p class="section-desc">
-            Trabalhar com um PC Desktop e um Laptop na mesma mesa geralmente obriga o usuário a usar dois pares de mouses e teclados, ou a investir em switches KVM físicos cheios de cabos.
-          </p>
+          <span class="section-tag">Simples assim</span>
+          <h2 class="section-title">Como funciona na prática</h2>
+          <p class="section-subtitle">Sem hardware extra, sem logins na nuvem e sem cabos espalhados pela mesa.</p>
         </div>
 
-        <div class="features-grid">
+        <div class="steps-grid">
           
-          <div class="feature-card">
-            <div class="feature-icon-box">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <div class="step-item-card">
+            <span class="step-number">01</span>
+            <h3 class="step-item-title">Instale</h3>
+            <p class="step-item-desc">
+              Instale o Nexa nos computadores que deseja conectar. Compatível nativamente com Windows 11, Windows 10 e Linux.
+            </p>
+          </div>
+
+          <div class="step-item-card">
+            <span class="step-number">02</span>
+            <h3 class="step-item-title">Conecte</h3>
+            <p class="step-item-desc">
+              Informe o computador de destino e conecte pela rede local. O pareamento seguro acontece em menos de três segundos.
+            </p>
+          </div>
+
+          <div class="step-item-card">
+            <span class="step-number">03</span>
+            <h3 class="step-item-title">Mova o cursor</h3>
+            <p class="step-item-desc">
+              Leve o mouse até a borda da tela e continue trabalhando. O teclado e a área de transferência acompanham seu cursor.
+            </p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         8. BENEFÍCIOS — Cards Leves e Amplos
+         ====================================================================== -->
+    <section id="recursos" class="section" style="background: #FAFBFA; border-top: 1px solid var(--border-light); border-bottom: 1px solid var(--border-light);">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Benefícios</span>
+          <h2 class="section-title">Pensado para o seu conforto diário</h2>
+          <p class="section-subtitle">Toda a tecnologia foi projetada para que você esqueça que existem dois computadores.</p>
+        </div>
+
+        <div class="benefits-grid">
+          
+          <div class="benefit-card">
+            <div class="benefit-icon-wrap">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="2" y="3" width="20" height="14" rx="2"></rect>
+                <line x1="8" y1="21" x2="16" y2="21"></line>
+                <line x1="12" y1="17" x2="12" y2="21"></line>
+              </svg>
+            </div>
+            <h3 class="benefit-title">Uma única mesa de trabalho</h3>
+            <p class="benefit-desc">
+              Use o mesmo teclado e mouse entre seus computadores. Sua mesa fica limpa, espaçosa e livre de periféricos duplicados.
+            </p>
+          </div>
+
+          <div class="benefit-card">
+            <div class="benefit-icon-wrap">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 14 14"></polyline>
+              </svg>
+            </div>
+            <h3 class="benefit-title">Rápido pela rede local</h3>
+            <p class="benefit-desc">
+              Comunicação direta ponto a ponto sem depender de servidores externos ou internet. Latência praticamente zero.
+            </p>
+          </div>
+
+          <div class="benefit-card">
+            <div class="benefit-icon-wrap">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
                 <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
               </svg>
             </div>
-            <h3 class="feature-title">Segurança Criptográfica Militar</h3>
-            <p class="feature-text">
-              Ao digitar senhas e dados confidenciais, nenhum pacote viaja em texto claro. Cifrado com <strong>ChaCha20-Poly1305</strong> e verificado visualmente por <strong>SAS PIN de 6 dígitos</strong>.
+            <h3 class="benefit-title">Privacidade em primeiro lugar</h3>
+            <p class="benefit-desc">
+              Seus dados, digitação e área de transferência permanecem estritamente dentro da sua rede local com criptografia Curve25519.
             </p>
-            <a href="./seguranca/" class="feature-badge" style="text-decoration:none;">Saiba mais sobre segurança →</a>
           </div>
 
-          <div class="feature-card">
-            <div class="feature-icon-box">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+          <div class="benefit-card">
+            <div class="benefit-icon-wrap">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="20 6 9 17 4 12"></polyline>
               </svg>
             </div>
-            <h3 class="feature-title">Coalescência para Mouses Gamers</h3>
-            <p class="feature-text">
-              Dispositivos de 500 Hz a 1000 Hz saturam redes comuns. O motor do Nexa consolida deltas de movimento em janelas inteligentes de 3ms, mantendo a resposta instantânea com 75% menos pacotes.
+            <h3 class="benefit-title">Feito para funcionar</h3>
+            <p class="benefit-desc">
+              Conexão simples, diagnóstico de rede integrado e recuperação automática caso um dos computadores seja reiniciado.
             </p>
-            <a href="./como-funciona/" class="feature-badge" style="text-decoration:none;">Ver funcionamento técnico →</a>
-          </div>
-
-          <div class="feature-card">
-            <div class="feature-icon-box">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
-                <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
-              </svg>
-            </div>
-            <h3 class="feature-title">Clipboard com Prevenção Anti-Echo</h3>
-            <p class="feature-text">
-              Copie no Windows e cole no Linux instantaneamente. O hash SHA-256 do Nexa impede que uma cópia remota dispare um loop infinito de replicação no clipboard do sistema operacional.
-            </p>
-            <a href="./recursos/" class="feature-badge" style="text-decoration:none;">Explorar recursos →</a>
-          </div>
-
-        </div>
-      </div>
-    </section>
-
-    <!-- Seção de Instalação e Guias por Sistema -->
-    <section class="section" style="background: var(--bg-surface-elevated); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
-      <div class="container">
-        <div class="section-header">
-          <span class="section-tag">Instalação Rápida</span>
-          <h2 class="section-title">Pronto para rodar no seu sistema operacional</h2>
-          <p class="section-desc">
-            Instruções completas, downloads de binários e regras de firewall para cada plataforma.
-          </p>
-        </div>
-
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px;">
-          
-          <div class="step-card">
-            <div class="step-header">
-              <span style="font-size: 1.6rem;">🪟</span>
-              <div class="step-title">Windows 11 / Windows 10</div>
-            </div>
-            <div class="step-body">
-              <p>Download direto em pacote ZIP portátil, regra de liberação de porta TCP no PowerShell e inicialização elevada no Agendador de Tarefas.</p>
-              <div style="margin-top: 20px;">
-                <a href="./instalacao/windows/" class="btn btn-primary" style="width: 100%;">
-                  <span>Guia de Instalação Windows →</span>
-                </a>
-              </div>
-            </div>
-          </div>
-
-          <div class="step-card">
-            <div class="step-header">
-              <span style="font-size: 1.6rem;">🐧</span>
-              <div class="step-title">Linux (Wayland / Ubuntu / Debian)</div>
-            </div>
-            <div class="step-body">
-              <p>Pacote Debian oficial (.deb), script de liberação de permissões do driver de kernel <code>/dev/uinput</code> e serviço de usuário <code>systemd</code>.</p>
-              <div style="margin-top: 20px;">
-                <a href="./instalacao/linux/" class="btn btn-primary" style="width: 100%;">
-                  <span>Guia de Instalação Linux →</span>
-                </a>
-              </div>
-            </div>
           </div>
 
         </div>
@@ -526,60 +508,34 @@
 
   </main>
 
-  <!-- Rodapé com Navegação Estruturada de SEO -->
+  <!-- ========================================================================
+       9. FOOTER — Minimalista e Confiável
+       ======================================================================== -->
   <footer class="site-footer">
     <div class="container">
-      <div class="footer-grid">
+      <div class="footer-top">
         <div>
-          <div style="display: flex; align-items: center; gap: 10px;">
-            <img src="./assets/brand/nexa-icon-32.png" alt="Nexa Icon" width="28" height="28">
-            <span style="font-size: 1.2rem; font-weight: 700; color: #fff;">Nexa</span>
-          </div>
+          <a href="./" class="brand-wrapper">
+            <img src="./assets/brand/nexa-icon-64.png" alt="Nexa" width="24" height="24">
+            <span class="brand-name">Nexa</span>
+          </a>
           <p class="footer-brand-desc">
-            Software de compartilhamento de mouse, teclado e clipboard em Rust de alta segurança, zero telemetria e latência quase nula.
+            Controle seus computadores de forma simples, fluida e segura.
           </p>
         </div>
 
-        <div>
-          <div class="footer-col-title">Páginas Principais</div>
-          <ul class="footer-links">
-            <li><a href="./" class="footer-link">Início</a></li>
-            <li><a href="./como-funciona/" class="footer-link">Como Funciona</a></li>
-            <li><a href="./recursos/" class="footer-link">Recursos & Comparativo</a></li>
-            <li><a href="./seguranca/" class="footer-link">Segurança & Criptografia</a></li>
-            <li><a href="./roadmap/" class="footer-link">Roadmap & Status</a></li>
-          </ul>
-        </div>
-
-        <div>
-          <div class="footer-col-title">Instalação & Guias</div>
-          <ul class="footer-links">
-            <li><a href="./instalacao/" class="footer-link">Hub de Instalação</a></li>
-            <li><a href="./instalacao/windows/" class="footer-link">Guia Windows 11 / 10</a></li>
-            <li><a href="./instalacao/linux/" class="footer-link">Guia Linux elementary / Ubuntu</a></li>
-            <li><a href="./documentacao/" class="footer-link">Manual da Linha de Comando</a></li>
-            <li><a href="./solucao-de-problemas/" class="footer-link">Solução de Problemas</a></li>
-          </ul>
-        </div>
-
-        <div>
-          <div class="footer-col-title">Comunidade & Ajuda</div>
-          <ul class="footer-links">
-            <li><a href="./faq/" class="footer-link">Perguntas Frequentes (FAQ)</a></li>
-            <li><a href="https://github.com/rafaelmaciels/Nexa" target="_blank" rel="noopener noreferrer" class="footer-link">Repositório no GitHub</a></li>
-            <li><a href="https://github.com/rafaelmaciels/Nexa/issues" target="_blank" rel="noopener noreferrer" class="footer-link">Reportar Problema</a></li>
-            <li><a href="https://github.com/rafaelmaciels/Nexa/releases" target="_blank" rel="noopener noreferrer" class="footer-link">Download de Releases</a></li>
-          </ul>
-        </div>
+        <nav class="footer-nav" aria-label="Links do Rodapé">
+          <a href="https://github.com/rafaelmaciels/Nexa" target="_blank" rel="noopener noreferrer" class="footer-link">GitHub</a>
+          <a href="./documentacao/" class="footer-link">Documentação</a>
+          <a href="./instalacao/" class="footer-link">Instalação</a>
+          <a href="./solucao-de-problemas/" class="footer-link">Ajuda</a>
+          <a href="https://github.com/rafaelmaciels/Nexa/releases" target="_blank" rel="noopener noreferrer" class="footer-link">Releases</a>
+        </nav>
       </div>
 
       <div class="footer-bottom">
-        <div>
-          © 2026 Nexa Contributors. Distribuído sob as licenças <a href="https://opensource.org/licenses/MIT" target="_blank" rel="noopener noreferrer">MIT</a> ou <a href="https://www.apache.org/licenses/LICENSE-2.0" target="_blank" rel="noopener noreferrer">Apache 2.0</a>.
-        </div>
-        <div>
-          Hospedado no <a href="https://pages.github.com/" target="_blank" rel="noopener noreferrer">GitHub Pages</a> (<code>nexa.github.io</code>).
-        </div>
+        <span>© 2026 Nexa Contributors. Software open-source sob licenças MIT e Apache 2.0.</span>
+        <span>Hospedado no GitHub Pages.</span>
       </div>
     </div>
   </footer>
