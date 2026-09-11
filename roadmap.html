@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Roadmap & Estado Real do Projeto — Nexa</title>
+  <meta name="description" content="Transparência sobre o desenvolvimento do Nexa: o que já está implementado, em desenvolvimento ativo e planejado para o futuro.">
+  
+  <link rel="icon" type="image/png" sizes="32x32" href="./assets/brand/nexa-icon-32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="./assets/brand/nexa-icon-256.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="./assets/css/style.css">
+  <link rel="stylesheet" href="./assets/css/components.css">
+  <link rel="stylesheet" href="./assets/css/docs.css">
+</head>
+<body>
+
+  <div class="ambient-glow"></div>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="./index.html" class="brand-wrapper">
+        <img src="./assets/brand/nexa-icon-64.png" alt="Nexa Logo" class="brand-logo-img">
+        <div class="brand-title-box">
+          <span class="brand-name">Nexa</span>
+          <span class="brand-tag">Roadmap</span>
+        </div>
+      </a>
+
+      <nav>
+        <ul class="nav-menu">
+          <li><a href="./index.html" class="nav-link">Início</a></li>
+          <li><a href="./docs.html" class="nav-link">Documentação</a></li>
+          <li><a href="./roadmap.html" class="nav-link active">Roadmap & Status</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <a href="https://github.com/rafaelmaciels/Nexa" target="_blank" rel="noopener noreferrer" class="btn-github">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+          </svg>
+          <span>GitHub</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container" style="padding: 56px 24px 80px;">
+    
+    <div class="section-header" style="text-align: left; max-width: 900px; margin-bottom: 40px;">
+      <span class="section-tag">Transparência Total</span>
+      <h1 style="font-size: 2.5rem; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 16px;">
+        Estado Atual do Projeto & Roadmap Oficial
+      </h1>
+      <p style="font-size: 1.15rem; color: var(--text-secondary); line-height: 1.6;">
+        O <strong>Nexa</strong> é um projeto de código aberto em constante evolução. Não acreditamos em fingir que o sistema está 100% concluído em todas as frentes. Esta página detalha honestamente o que já está funcional e testado, o que está em desenvolvimento ativo e o que está planejado para as próximas versões.
+      </p>
+    </div>
+
+    <!-- Indicadores de Status Geral -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; margin-bottom: 48px;">
+      
+      <div style="background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 22px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+          <span style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted);">SUÍTE DE TESTES</span>
+          <span class="status-pill status-pill-ready">72 Testes OK</span>
+        </div>
+        <div style="font-size: 1.8rem; font-weight: 800; color: #34d399;">100% Aprovados</div>
+        <p style="font-size: 0.82rem; color: var(--text-dim); margin-top: 6px;">
+          Testes automatizados unitários, de integração, de protocolo e de criptografia passando sem erros.
+        </p>
+      </div>
+
+      <div style="background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 22px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+          <span style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted);">CENÁRIO PRINCIPAL</span>
+          <span class="status-pill status-pill-ready">Operacional</span>
+        </div>
+        <div style="font-size: 1.8rem; font-weight: 800; color: #a5b4fc;">Windows ➔ Linux</div>
+        <p style="font-size: 0.82rem; color: var(--text-dim); margin-top: 6px;">
+          Controle de Laptop Linux (elementary OS 8.1 / Ubuntu) a partir de PC com Windows 11 ativo.
+        </p>
+      </div>
+
+      <div style="background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 22px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+          <span style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted);">EM ANDAMENTO</span>
+          <span class="status-pill status-pill-progress">Em Progresso</span>
+        </div>
+        <div style="font-size: 1.8rem; font-weight: 800; color: #fbbf24;">Linux Wayland Host</div>
+        <p style="font-size: 0.82rem; color: var(--text-dim); margin-top: 6px;">
+          Implementação do portal de captura XDG InputCapture / libeis para Linux como transmissor.
+        </p>
+      </div>
+
+    </div>
+
+    <!-- Tabela Detalhada de Matriz de Recursos -->
+    <h2 style="font-size: 1.6rem; font-weight: 700; margin-bottom: 20px;">Matriz Detalhada de Recursos e Compatibilidade</h2>
+    
+    <div class="docs-table-wrapper" style="margin-bottom: 56px;">
+      <table class="docs-table">
+        <thead>
+          <tr>
+            <th>Funcionalidade / Componente</th>
+            <th>Status Real</th>
+            <th>Descrição e Detalhes no Código-Fonte</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Windows como Host (Transmissor)</strong></td>
+            <td><span class="status-pill status-pill-ready">Implementado</span></td>
+            <td>Captura completa de mouse e teclado via Low-Level Hooks (<code>WH_MOUSE_LL</code>, <code>WH_KEYBOARD_LL</code>) com suporte a DPI Awareness e supressão de cursor local.</td>
+          </tr>
+          <tr>
+            <td><strong>Windows como Guest (Receptor)</strong></td>
+            <td><span class="status-pill status-pill-ready">Implementado</span></td>
+            <td>Injeção precisa via Win32 <code>SendInput</code> respeitando coordenadas normalizadas e teclado com scancodes estendidos.</td>
+          </tr>
+          <tr>
+            <td><strong>Linux como Guest (Receptor /dev/uinput)</strong></td>
+            <td><span class="status-pill status-pill-ready">Implementado</span></td>
+            <td>Injeção nativa via dispositivo virtual de kernel evdev sem precisar rodar como root, compatível com Wayland (Gala / Mutter) e X11.</td>
+          </tr>
+          <tr>
+            <td><strong>Linux como Host (Transmissor Wayland)</strong></td>
+            <td><span class="status-pill status-pill-progress">Em Desenvolvimento</span></td>
+            <td>Estrutura <code>LinuxInputCapturer</code> criada. Integração completa com o portal <code>org.freedesktop.portal.InputCapture</code> e <code>libeis</code> em implementação ativa.</td>
+          </tr>
+          <tr>
+            <td><strong>Criptografia ChaCha20-Poly1305</strong></td>
+            <td><span class="status-pill status-pill-ready">Implementado</span></td>
+            <td>Criptografia autenticada ponta a ponta com nonces sequenciais e prefixos de direção únicos (anti-replay).</td>
+          </tr>
+          <tr>
+            <td><strong>Pareamento Visual via SAS PIN de 6 Dígitos</strong></td>
+            <td><span class="status-pill status-pill-ready">Implementado</span></td>
+            <td>Derivação HKDF-SHA256 gerando o PIN <code>XXX YYY</code> para verificação mútua contra ataques de Homem-no-Meio (MITM).</td>
+          </tr>
+          <tr>
+            <td><strong>Sincronização de Clipboard UTF-8 com Anti-Echo</strong></td>
+            <td><span class="status-pill status-pill-ready">Implementado</span></td>
+            <td>Hash SHA-256 suprimindo loops infinitos de replicação com teto de 10 MB contra travamentos.</td>
+          </tr>
+          <tr>
+            <td><strong>Coalescência de Mouse Gamer</strong></td>
+            <td><span class="status-pill status-pill-ready">Implementado</span></td>
+            <td>Janela de 3ms que compacta eventos de 500 Hz a 1000 Hz sem perda de precisão física.</td>
+          </tr>
+          <tr>
+            <td><strong>Interface Gráfica Web Embutida (GUI)</strong></td>
+            <td><span class="status-pill status-pill-ready">Implementado</span></td>
+            <td>Servidor HTTP local na porta 25802 com canvas de telas interativo, alternador de lados e diagnóstico visual.</td>
+          </tr>
+          <tr>
+            <td><strong>Diagnóstico Granular (--test-connection)</strong></td>
+            <td><span class="status-pill status-pill-ready">Implementado</span></td>
+            <td>Verificação em 5 passos diferenciando Timeout, Firewall, Daemon offline e falhas de pareamento.</td>
+          </tr>
+          <tr>
+            <td><strong>Transferência de Arquivos Drag & Drop</strong></td>
+            <td><span class="status-pill status-pill-planned">Planejado</span></td>
+            <td>Streaming de arquivos entre computadores através do arrastar de ícones pela borda da tela.</td>
+          </tr>
+          <tr>
+            <td><strong>Suporte a macOS (Apple Silicon & Intel)</strong></td>
+            <td><span class="status-pill status-pill-planned">Planejado</span></td>
+            <td>Implementação de capturador e injetor nativos via CGEventTap e Quartz Display Services no macOS.</td>
+          </tr>
+          <tr>
+            <td><strong>Topologia Multi-Monitores em Grade (Matriz 2D)</strong></td>
+            <td><span class="status-pill status-pill-planned">Planejado</span></td>
+            <td>Configuração gráfica de telas acima, abaixo e em disposições complexas além de esquerda/direita.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Como Contribuir -->
+    <div style="background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 36px; text-align: center;">
+      <h2 style="font-size: 1.8rem; font-weight: 700; margin-bottom: 14px;">Deseja Ajudar no Desenvolvimento?</h2>
+      <p style="font-size: 1.05rem; color: var(--text-secondary); max-width: 680px; margin: 0 auto 28px; line-height: 1.6;">
+        O Nexa é um projeto comunitário de código aberto sob licenças MIT e Apache-2.0. Desenvolvedores Rust, especialistas em Wayland, entusiastas de Linux e designers são muito bem-vindos!
+      </p>
+      <div style="display: flex; align-items: center; justify-content: center; gap: 16px; flex-wrap: wrap;">
+        <a href="https://github.com/rafaelmaciels/Nexa" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
+          <span>Ver Repositório no GitHub</span>
+        </a>
+        <a href="https://github.com/rafaelmaciels/Nexa/issues" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">
+          <span>Explorar Issues Abertas</span>
+        </a>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <div>© 2026 Nexa Contributors. Roadmap Oficial para GitHub Pages (<code>nexa.github.io</code>).</div>
+        <div><a href="./index.html">← Retornar à Página Inicial</a></div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="./assets/js/main.js"></script>
+</body>
+</html>
