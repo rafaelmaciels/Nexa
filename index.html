@@ -4,31 +4,108 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <!-- SEO & Metatags -->
-  <title>Nexa — Compartilhamento de Mouse, Teclado e Clipboard em Rede Local</title>
-  <meta name="description" content="Controle múltiplos computadores com um único mouse e teclado através da rede local. Desenvolvido em Rust com criptografia ChaCha20-Poly1305 e suporte a Windows 11 e Linux.">
-  <meta name="keywords" content="Nexa, KVM por software, KVM Rust, compartilhar mouse e teclado, Deskflow, Barrier, Synergy alternativo, Wayland KVM, Windows 11 Linux">
+  <!-- SEO On-Page Primário & Desambiguação de Entidade -->
+  <title>Nexa — Compartilhamento de Mouse, Teclado e Clipboard em Rede Local (KVM Rust)</title>
+  <meta name="description" content="Software KVM de alta performance desenvolvido em Rust. Controle múltiplos computadores (Windows 11 e Linux) com um único mouse e teclado através da rede local, com criptografia ChaCha20-Poly1305 ponta a ponta e zero nuvem.">
+  <meta name="keywords" content="Nexa KVM, Nexa software, KVM por software, compartilhar mouse e teclado, controlar Linux pelo Windows, KVM Rust, alternar monitor rede local, Synergy alternativa, Barrier alternativa, Deskflow, Wayland KVM">
   <meta name="author" content="Nexa Contributors">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <link rel="canonical" href="https://nexa.github.io/">
+  <link rel="alternate" hreflang="pt-BR" href="https://nexa.github.io/">
+  <link rel="alternate" hreflang="x-default" href="https://nexa.github.io/">
+
+  <!-- Google Search Console Verification Placeholder -->
+  <!-- <meta name="google-site-verification" content="SEU_CODIGO_DE_VERIFICACAO_AQUI" /> -->
   
-  <!-- OpenGraph / Social -->
-  <meta property="og:title" content="Nexa — KVM por Software de Alta Performance em Rust">
-  <meta property="og:description" content="Mova o cursor entre telas de sistemas operacionais diferentes encostando na borda do monitor. Seguro, ultra-rápido e 100% local.">
-  <meta property="og:image" content="./assets/brand/nexa-logo-dark.png">
+  <!-- OpenGraph / Facebook / WhatsApp / Discord -->
+  <meta property="og:locale" content="pt_BR">
   <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Nexa KVM Share">
+  <meta property="og:title" content="Nexa — Controle Múltiplos Computadores com um Único Mouse e Teclado">
+  <meta property="og:description" content="Software KVM em Rust de alta precisão. Mova o cursor entre telas encostando na borda do monitor com criptografia de hardware ChaCha20-Poly1305.">
+  <meta property="og:url" content="https://nexa.github.io/">
+  <meta property="og:image" content="https://nexa.github.io/assets/brand/nexa-logo-dark.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Logotipo e Interface do Nexa KVM Share">
   
-  <!-- Favicon oficial -->
+  <!-- Twitter / X Cards -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Nexa — Compartilhamento de Mouse, Teclado e Clipboard em Rust">
+  <meta name="twitter:description" content="KVM virtual por software para Windows 11 e Linux Wayland. Zero latência, 100% rede local.">
+  <meta name="twitter:image" content="https://nexa.github.io/assets/brand/nexa-logo-dark.png">
+
+  <!-- Favicons e Ícones Oficiais de Marca -->
   <link rel="icon" type="image/png" sizes="32x32" href="./assets/brand/nexa-icon-32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="./assets/brand/nexa-icon-16.png">
   <link rel="apple-touch-icon" sizes="180x180" href="./assets/brand/nexa-icon-256.png">
 
-  <!-- Google Fonts Inter -->
+  <!-- Otimização de Fontes e Renderização -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 
-  <!-- Estilos do Site -->
+  <!-- Estilos Estruturados -->
   <link rel="stylesheet" href="./assets/css/style.css">
   <link rel="stylesheet" href="./assets/css/components.css">
+
+  <!-- Dados Estruturados Schema.org (JSON-LD) para SEO Semântico & Knowledge Graph -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://nexa.github.io/#website",
+        "url": "https://nexa.github.io/",
+        "name": "Nexa KVM Share",
+        "description": "Software open-source de compartilhamento de mouse, teclado e clipboard em rede local desenvolvido em Rust.",
+        "publisher": {
+          "@id": "https://nexa.github.io/#organization"
+        },
+        "inLanguage": "pt-BR"
+      },
+      {
+        "@type": "Organization",
+        "@id": "https://nexa.github.io/#organization",
+        "name": "Nexa Project",
+        "url": "https://nexa.github.io/",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://nexa.github.io/assets/brand/nexa-logo-dark.png",
+          "width": "512",
+          "height": "512"
+        },
+        "sameAs": [
+          "https://github.com/rafaelmaciels/Nexa"
+        ]
+      },
+      {
+        "@type": "SoftwareApplication",
+        "@id": "https://nexa.github.io/#software",
+        "name": "Nexa",
+        "operatingSystem": "Windows 11, Windows 10 x64, Linux (elementary OS 8.1 Wayland, Ubuntu 22.04+, Debian 12+)",
+        "applicationCategory": "DeveloperApplication",
+        "applicationSubCategory": "KVM Software / Remote Peripheral Sharing",
+        "softwareVersion": "0.1.0",
+        "license": "https://opensource.org/licenses/MIT",
+        "description": "Permite controlar múltiplos computadores na mesma mesa com um único mouse e teclado através da rede local, com conversão geométrica 2D e criptografia ChaCha20-Poly1305.",
+        "offers": {
+          "@type": "Offer",
+          "price": "0.00",
+          "priceCurrency": "USD"
+        },
+        "featureList": [
+          "Transição fluida entre monitores ao tocar a borda da tela",
+          "Criptografia de ponta a ponta com ChaCha20-Poly1305 e confirmação SAS PIN",
+          "Sincronização de área de transferência UTF-8 com algoritmo Anti-Echo SHA-256",
+          "Coalescência adaptativa para mouses gamers de 1000Hz",
+          "Suporte nativo a Wayland via /dev/uinput e Windows 11 com Low-Level Hooks"
+        ]
+      }
+    ]
+  }
+  </script>
 </head>
 <body>
 
@@ -38,30 +115,32 @@
   <!-- Header / Barra de Navegação -->
   <header class="site-header">
     <div class="container header-inner">
-      <a href="./index.html" class="brand-wrapper" title="Nexa — Página Inicial">
-        <img src="./assets/brand/nexa-icon-64.png" alt="Nexa Logo" class="brand-logo-img">
+      <a href="./" class="brand-wrapper" title="Nexa — Página Inicial">
+        <img src="./assets/brand/nexa-icon-64.png" alt="Nexa Logo" class="brand-logo-img" width="34" height="34">
         <div class="brand-title-box">
           <span class="brand-name">Nexa</span>
-          <span class="brand-tag">v0.1.0</span>
+          <span class="brand-tag">KVM Share</span>
         </div>
       </a>
 
-      <!-- Menu de Navegação -->
-      <nav>
+      <!-- Menu de Navegação Semântico com Links Internos de SEO -->
+      <nav aria-label="Navegação Principal">
         <ul class="nav-menu">
-          <li><a href="./index.html" class="nav-link active">Início</a></li>
-          <li><a href="#como-funciona" class="nav-link">Como Funciona</a></li>
-          <li><a href="#recursos" class="nav-link">Recursos</a></li>
-          <li><a href="#instalacao" class="nav-link">Instalação</a></li>
-          <li><a href="./docs.html" class="nav-link">Documentação</a></li>
-          <li><a href="./roadmap.html" class="nav-link">Roadmap & Status</a></li>
+          <li><a href="./" class="nav-link active">Início</a></li>
+          <li><a href="./como-funciona/" class="nav-link">Como Funciona</a></li>
+          <li><a href="./recursos/" class="nav-link">Recursos</a></li>
+          <li><a href="./instalacao/" class="nav-link">Instalação</a></li>
+          <li><a href="./seguranca/" class="nav-link">Segurança</a></li>
+          <li><a href="./documentacao/" class="nav-link">Documentação</a></li>
+          <li><a href="./solucao-de-problemas/" class="nav-link">Ajuda</a></li>
+          <li><a href="./roadmap/" class="nav-link">Roadmap</a></li>
         </ul>
       </nav>
 
       <!-- Ações do Header -->
       <div class="header-actions">
-        <a href="https://github.com/rafaelmaciels/Nexa" target="_blank" rel="noopener noreferrer" class="btn-github">
-          <svg viewBox="0 0 24 24">
+        <a href="https://github.com/rafaelmaciels/Nexa" target="_blank" rel="noopener noreferrer" class="btn-github" title="Ver código-fonte do Nexa no GitHub">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
             <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
           </svg>
           <span>GitHub</span>
@@ -77,13 +156,15 @@
     </div>
   </header>
 
-  <!-- Hero Section -->
+  <!-- Conteúdo Principal -->
   <main>
+    
+    <!-- Hero Section -->
     <section class="hero-section">
       <div class="container hero-content">
         <div class="hero-badge-pill">
           <span class="pulse-dot"></span>
-          <span>Open-Source em Rust 2021 • Zero Nuvem • Criptografia Militar</span>
+          <span>Projeto Open-Source em Rust 2021 • 100% Rede Local • Sem Servidores na Nuvem</span>
         </div>
 
         <h1 class="hero-title">
@@ -91,53 +172,51 @@
         </h1>
 
         <p class="hero-subtitle">
-          Posicione suas máquinas lado a lado e mova o cursor livremente entre telas através da rede local.
-          Projetado para eliminar latência, sem fios extras e com compatibilidade nativa entre <strong>Windows 11</strong> e <strong>Linux</strong>.
+          Posicione seu PC Windows e seu Laptop Linux lado a lado na mesa. Ao encostar o cursor na borda do monitor, você entra suavemente na outra máquina através da sua rede local — sem switches de hardware e com latência imperceptível.
         </p>
 
         <div class="hero-actions">
-          <a href="#instalacao" class="btn btn-primary">
+          <a href="./instalacao/" class="btn btn-primary">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
               <polyline points="7 10 12 15 17 10"></polyline>
               <line x1="12" y1="15" x2="12" y2="3"></line>
             </svg>
-            <span>Baixar Nexa v0.1.0</span>
+            <span>Guia de Instalação</span>
           </a>
-          <a href="./docs.html" class="btn btn-secondary">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
-              <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
-            </svg>
-            <span>Ler Documentação</span>
+          <a href="./como-funciona/" class="btn btn-secondary">
+            <span>Entenda Como Funciona</span>
+          </a>
+          <a href="./documentacao/" class="btn btn-outline">
+            <span>Documentação Técnica</span>
           </a>
         </div>
 
         <div class="hero-meta-badges">
           <div class="hero-meta-item">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
               <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
               <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
             </svg>
             <span>ChaCha20-Poly1305 + PIN SAS</span>
           </div>
           <div class="hero-meta-item">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
               <circle cx="12" cy="12" r="10"></circle>
               <polyline points="12 6 12 12 14 14"></polyline>
             </svg>
             <span>Latência sub-milissegundo</span>
           </div>
           <div class="hero-meta-item">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
               <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
             </svg>
-            <span>Coalescência Gamer 1000Hz</span>
+            <span>Coalescência Mouse 1000Hz</span>
           </div>
         </div>
       </div>
 
-      <!-- Demonstração Interativa do Painel Gráfico (Fiel ao print) -->
+      <!-- Demonstração Interativa do Painel Gráfico Oficial -->
       <div class="container">
         
         <!-- Banner de Atalho de Emergência KVM -->
@@ -150,19 +229,16 @@
                 <line x1="10" y1="8" x2="10" y2="8"></line>
                 <line x1="14" y1="8" x2="14" y2="8"></line>
                 <line x1="18" y1="8" x2="18" y2="8"></line>
-                <line x1="6" y1="12" x2="6" y2="12"></line>
-                <line x1="18" y1="12" x2="18" y2="12"></line>
-                <line x1="9" y1="16" x2="15" y2="16"></line>
               </svg>
             </div>
             <div>
               <strong>Atalho de Emergência KVM:</strong> Se o cursor estiver na tela remota e você quiser soltá-lo imediatamente, pressione <span class="kbd-badge">Esc</span> ou <span class="kbd-badge">Scroll Lock</span>.
             </div>
           </div>
-          <span style="font-size: 0.78rem; color: #f87171; opacity: 0.8;">Atalho Ativo</span>
+          <a href="./solucao-de-problemas/" style="font-size: 0.82rem; color: #fca5a5; text-decoration: underline;">Ver atalhos</a>
         </div>
 
-        <!-- Canvas Espacial de Monitores (Componente Interativo) -->
+        <!-- Canvas Espacial de Monitores (Interativo) -->
         <div class="canvas-card">
           <div class="canvas-header">
             <div>
@@ -182,7 +258,6 @@
           <!-- Palco dos computadores -->
           <div id="screensStage" class="screens-stage">
             
-            <!-- Tela Windows Host -->
             <div id="screenHost" class="screen-card active-screen">
               <div class="screen-card-header">
                 <div class="screen-name">
@@ -195,11 +270,10 @@
                 <span>Cursor Local Ativo</span>
               </div>
               <div class="screen-desc">
-                Teclado e mouse físicos conectados aqui.
+                Teclado e mouse físicos conectados nesta máquina.
               </div>
             </div>
 
-            <!-- Ponte / Seta de Transição -->
             <div id="transitionBridge" class="transition-bridge">
               <span class="transition-label">Transição Livre</span>
               <div class="transition-arrow">
@@ -209,7 +283,6 @@
               </div>
             </div>
 
-            <!-- Tela Linux Guest -->
             <div id="screenRemote" class="screen-card">
               <div class="screen-card-header">
                 <div class="screen-name">
@@ -221,7 +294,7 @@
                 <span>○ Controlado pela rede local</span>
               </div>
               <div class="screen-desc">
-                 elementary OS 8.1 Wayland via <code>/dev/uinput</code>.
+                 elementary OS 8.1 Wayland via emulação <code>/dev/uinput</code>.
               </div>
             </div>
 
@@ -229,10 +302,10 @@
 
           <!-- Controles do Canvas -->
           <div class="canvas-controls">
-            <button id="btnPositionLeft" class="btn-position-toggle">
+            <button id="btnPositionLeft" class="btn-position-toggle" aria-label="Mover Linux para a esquerda">
               <span>◄ Linux à Esquerda</span>
             </button>
-            <button id="btnPositionRight" class="btn-position-toggle active">
+            <button id="btnPositionRight" class="btn-position-toggle active" aria-label="Mover Linux para a direita">
               <span>Linux à Direita ►</span>
             </button>
             <button id="btnSimulateTransition" class="btn btn-outline" style="margin-left: 12px;">
@@ -244,7 +317,6 @@
         <!-- Grid de Controle do Nexa e Diagnóstico em Tempo Real -->
         <div class="dual-panel-grid">
           
-          <!-- Painel de Controle -->
           <div class="panel-card">
             <div class="panel-title">Controle do Nexa</div>
             <div class="panel-subtitle">Inicie como Servidor neste computador ou conecte a outro dispositivo.</div>
@@ -275,7 +347,6 @@
             </div>
           </div>
 
-          <!-- Painel de Diagnóstico em Tempo Real -->
           <div class="panel-card">
             <div class="panel-title">Diagnóstico em Tempo Real</div>
             <div class="panel-subtitle">Verificação instantânea de rede e comunicação criptográfica.</div>
@@ -331,7 +402,7 @@
             <span>🐧 Solução Definitiva para o Linux (/dev/uinput)</span>
           </div>
           <div class="uinput-desc">
-            No Linux, o sistema operacional exige permissão de acesso ao driver do kernel <code>/dev/uinput</code> para mover o mouse e digitar sem necessidade de root. Execute este comando único no terminal para liberar o acesso instantaneamente:
+            No Linux, o sistema operacional exige permissão de acesso ao driver do kernel <code>/dev/uinput</code> para mover o mouse e simular teclas sem exigir permissões de root. Execute este comando único no terminal:
           </div>
           <div class="code-box">
             <span class="code-snippet">sudo modprobe uinput && sudo chmod 666 /dev/uinput && sudo usermod -aG input $USER</span>
@@ -348,14 +419,14 @@
       </div>
     </section>
 
-    <!-- Seção: Por que o Nexa? (O Problema que ele Resolve) -->
-    <section id="recursos" class="section">
+    <!-- Seção de Solução do Problema (SEO de Intenção Informacional e Comparativo) -->
+    <section class="section">
       <div class="container">
         <div class="section-header">
-          <span class="section-tag">Engenharia Moderna</span>
-          <h2 class="section-title">Construído para superar as limitações do passado</h2>
+          <span class="section-tag">Problema e Solução</span>
+          <h2 class="section-title">Por que usar o Nexa em vez de KVM físico ou softwares legados?</h2>
           <p class="section-desc">
-            Softwares tradicionais de KVM sofrem com bases de código antigas em C++, latência perceptível, falhas de segurança e problemas com compositores modernos. O Nexa foi projetado do zero em Rust para uma experiência sem fricção.
+            Trabalhar com um PC Desktop e um Laptop na mesma mesa geralmente obriga o usuário a usar dois pares de mouses e teclados, ou a investir em switches KVM físicos cheios de cabos.
           </p>
         </div>
 
@@ -368,11 +439,11 @@
                 <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
               </svg>
             </div>
-            <h3 class="feature-title">Criptografia Ponta a Ponta</h3>
+            <h3 class="feature-title">Segurança Criptográfica Militar</h3>
             <p class="feature-text">
-              Toda a movimentação de mouse, teclas e textos trafegam por canal cifrado com <strong>ChaCha20-Poly1305</strong>. Um código visual <strong>SAS PIN de 6 dígitos</strong> confirma o pareamento e elimina ataques de Homem-no-Meio (MITM).
+              Ao digitar senhas e dados confidenciais, nenhum pacote viaja em texto claro. Cifrado com <strong>ChaCha20-Poly1305</strong> e verificado visualmente por <strong>SAS PIN de 6 dígitos</strong>.
             </p>
-            <span class="feature-badge">Zero Sniffing</span>
+            <a href="./seguranca/" class="feature-badge" style="text-decoration:none;">Saiba mais sobre segurança →</a>
           </div>
 
           <div class="feature-card">
@@ -381,11 +452,11 @@
                 <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
               </svg>
             </div>
-            <h3 class="feature-title">Coalescência de Mouse Gamer</h3>
+            <h3 class="feature-title">Coalescência para Mouses Gamers</h3>
             <p class="feature-text">
-              Mouses de alta taxa de polling (500 Hz a 1000 Hz) geram milhares de eventos por segundo. O coalescedor adaptativo do Nexa compacta pacotes em janelas de 3ms, cortando o uso de banda em 75% sem qualquer perda de precisão.
+              Dispositivos de 500 Hz a 1000 Hz saturam redes comuns. O motor do Nexa consolida deltas de movimento em janelas inteligentes de 3ms, mantendo a resposta instantânea com 75% menos pacotes.
             </p>
-            <span class="feature-badge">Taxa 1000 Hz Nativa</span>
+            <a href="./como-funciona/" class="feature-badge" style="text-decoration:none;">Ver funcionamento técnico →</a>
           </div>
 
           <div class="feature-card">
@@ -395,316 +466,109 @@
                 <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
               </svg>
             </div>
-            <h3 class="feature-title">Clipboard com Algoritmo Anti-Echo</h3>
+            <h3 class="feature-title">Clipboard com Prevenção Anti-Echo</h3>
             <p class="feature-text">
-              Copie textos formatados, códigos e emojis em uma máquina e cole na outra. O algoritmo de hash SHA-256 previne ativamente loops infinitos de cópia e conta com barreira protetora contra payloads gigantescos de até 10 MB.
+              Copie no Windows e cole no Linux instantaneamente. O hash SHA-256 do Nexa impede que uma cópia remota dispare um loop infinito de replicação no clipboard do sistema operacional.
             </p>
-            <span class="feature-badge">UTF-8 Completo</span>
-          </div>
-
-          <div class="feature-card">
-            <div class="feature-icon-box">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="12" cy="12" r="10"></circle>
-                <line x1="2" y1="12" x2="22" y2="12"></line>
-                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
-              </svg>
-            </div>
-            <h3 class="feature-title">Independência de Bandas Wi-Fi</h3>
-            <p class="feature-text">
-              Conecte suas máquinas mesmo se uma estiver no Wi-Fi 2.4 GHz e a outra no 5.0 GHz ou no cabo de rede Ethernet. O Nexa opera via TCP direto com fallback para descoberta automática por broadcast UDP local.
-            </p>
-            <span class="feature-badge">TCP + UDP Broadcast</span>
-          </div>
-
-          <div class="feature-card">
-            <div class="feature-icon-box">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
-                <line x1="8" y1="21" x2="16" y2="21"></line>
-                <line x1="12" y1="17" x2="12" y2="21"></line>
-              </svg>
-            </div>
-            <h3 class="feature-title">Topologia Espacial 2D</h3>
-            <p class="feature-text">
-              Converte resoluções assimétricas (ex.: monitor 4K 3840x2160 no Windows ao lado de tela Full HD 1920x1080 no Linux) através de coordenadas normalizadas (0..65535), garantindo que o cursor entre exatamente na altura certa.
-            </p>
-            <span class="feature-badge">Proporcional 2D</span>
-          </div>
-
-          <div class="feature-card">
-            <div class="feature-icon-box">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                <polyline points="22 4 12 14.01 9 11.01"></polyline>
-              </svg>
-            </div>
-            <h3 class="feature-title">Diagnóstico Granular</h3>
-            <p class="feature-text">
-              Acabou a adivinhação. O comando integrado <code>--test-connection</code> verifica passo a passo: alcance de IP, bloqueio por firewall, daemon ativo, handshake e autorização, informando com precisão a causa de qualquer falha.
-            </p>
-            <span class="feature-badge">CLI + Web GUI</span>
+            <a href="./recursos/" class="feature-badge" style="text-decoration:none;">Explorar recursos →</a>
           </div>
 
         </div>
       </div>
     </section>
 
-    <!-- Seção: Como Funciona (Arquitetura Técnica) -->
-    <section id="como-funciona" class="section" style="background: var(--bg-surface-elevated); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+    <!-- Seção de Instalação e Guias por Sistema -->
+    <section class="section" style="background: var(--bg-surface-elevated); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
       <div class="container">
         <div class="section-header">
-          <span class="section-tag">Por dentro do motor</span>
-          <h2 class="section-title">Arquitetura de Baixo Nível e Protocolo Binário</h2>
+          <span class="section-tag">Instalação Rápida</span>
+          <h2 class="section-title">Pronto para rodar no seu sistema operacional</h2>
           <p class="section-desc">
-            Veja como o Nexa orquestra hooks do sistema operacional, criptografia e serialização binária com overhead mínimo.
+            Instruções completas, downloads de binários e regras de firewall para cada plataforma.
           </p>
         </div>
 
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px;">
           
           <div class="step-card">
             <div class="step-header">
-              <div class="step-number">1</div>
-              <div class="step-title">Captura Nativa de Entrada</div>
+              <span style="font-size: 1.6rem;">🪟</span>
+              <div class="step-title">Windows 11 / Windows 10</div>
             </div>
             <div class="step-body">
-              No <strong>Windows</strong>, o Nexa instala Low-Level Hooks (<code>WH_MOUSE_LL</code> e <code>WH_KEYBOARD_LL</code>) com DPI Awareness ativo. No <strong>Linux</strong>, emula os periféricos diretamente no kernel via <code>/dev/uinput</code>.
+              <p>Download direto em pacote ZIP portátil, regra de liberação de porta TCP no PowerShell e inicialização elevada no Agendador de Tarefas.</p>
+              <div style="margin-top: 20px;">
+                <a href="./instalacao/windows/" class="btn btn-primary" style="width: 100%;">
+                  <span>Guia de Instalação Windows →</span>
+                </a>
+              </div>
             </div>
           </div>
 
           <div class="step-card">
             <div class="step-header">
-              <div class="step-number">2</div>
-              <div class="step-title">Framing Binário de 16 Bytes</div>
+              <span style="font-size: 1.6rem;">🐧</span>
+              <div class="step-title">Linux (Wayland / Ubuntu / Debian)</div>
             </div>
             <div class="step-body">
-              Todo pacote possui cabeçalho de 16 bytes: Magic <code>0x4E455841</code> ("NEXA"), versão, tipo de evento (mouse, teclado, clipboard, ping/pong), tamanho do payload e checksum <strong>CRC32</strong> anti-corrupção.
+              <p>Pacote Debian oficial (.deb), script de liberação de permissões do driver de kernel <code>/dev/uinput</code> e serviço de usuário <code>systemd</code>.</p>
+              <div style="margin-top: 20px;">
+                <a href="./instalacao/linux/" class="btn btn-primary" style="width: 100%;">
+                  <span>Guia de Instalação Linux →</span>
+                </a>
+              </div>
             </div>
           </div>
 
-          <div class="step-card">
-            <div class="step-header">
-              <div class="step-number">3</div>
-              <div class="step-title">Túnel Criptográfico Seguro</div>
-            </div>
-            <div class="step-body">
-              O handshake troca chaves efêmeras <strong>X25519</strong> e deriva uma chave simétrica de 32 bytes via HKDF-SHA256. Nonces sequenciais garantem rejeição imediata de ataques de repetição (anti-replay).
-            </div>
-          </div>
-
-          <div class="step-card">
-            <div class="step-header">
-              <div class="step-number">4</div>
-              <div class="step-title">Injeção Transparente no SO</div>
-            </div>
-            <div class="step-body">
-              Quando o cursor cruza a borda, o Nexa suprime os eventos na máquina transmissora e transmite as coordenadas normalizadas para o receptor, que injeta os scancodes exatos (ABNT2 e US).
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </section>
-
-    <!-- Seção: Instalação e Primeiros Passos -->
-    <section id="instalacao" class="section">
-      <div class="container">
-        <div class="section-header">
-          <span class="section-tag">Comece em Minutos</span>
-          <h2 class="section-title">Instalação e Configuração Rápida</h2>
-          <p class="section-desc">
-            Escolha o sistema operacional correspondente e configure sua rede local em poucos passos.
-          </p>
-        </div>
-
-        <!-- Abas comutáveis: Windows / Linux -->
-        <div class="platform-tabs-nav">
-          <button class="platform-tab-btn active" data-platform="windows">
-            <span>🪟 Windows 11 / Windows 10</span>
-          </button>
-          <button class="platform-tab-btn" data-platform="linux">
-            <span>🐧 Linux (elementary OS / Ubuntu / Debian)</span>
-          </button>
-        </div>
-
-        <!-- Conteúdo da Aba Windows -->
-        <div id="tab-content-windows" class="platform-tab-panel active">
-          <div class="steps-container">
-            
-            <div class="step-card">
-              <div class="step-header">
-                <div class="step-number">1</div>
-                <div class="step-title">Download do Executável</div>
-              </div>
-              <div class="step-body">
-                <p>Baixe o pacote pré-compilado para Windows x64 e extraia em <code>C:\Nexa\</code>:</p>
-                <div class="code-box">
-                  <span class="code-snippet">https://github.com/rafaelmaciels/Nexa/releases/latest/download/nexa-windows-x64.zip</span>
-                  <a href="https://github.com/rafaelmaciels/Nexa/releases/latest/download/nexa-windows-x64.zip" class="btn-copy-code" style="text-decoration:none;">
-                    <span>Download (.zip)</span>
-                  </a>
-                </div>
-              </div>
-            </div>
-
-            <div class="step-card">
-              <div class="step-header">
-                <div class="step-number">2</div>
-                <div class="step-title">Liberar a Porta 25800 no Firewall do Windows</div>
-              </div>
-              <div class="step-body">
-                <p>Abra o <strong>PowerShell como Administrador</strong> e execute:</p>
-                <div class="code-box">
-                  <span class="code-snippet">netsh advfirewall firewall add rule name="Nexa KVM Share" dir=in action=allow protocol=TCP localport=25800 profile=any</span>
-                  <button class="btn-copy-code" data-clipboard-text="netsh advfirewall firewall add rule name=&quot;Nexa KVM Share&quot; dir=in action=allow protocol=TCP localport=25800 profile=any">
-                    <span>Copiar Comando</span>
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <div class="step-card">
-              <div class="step-header">
-                <div class="step-number">3</div>
-                <div class="step-title">Iniciar o Painel Gráfico ou Linha de Comando</div>
-              </div>
-              <div class="step-body">
-                <p>Dê um duplo clique em <code>nexa-daemon.exe</code> para abrir a interface gráfica no navegador ou inicie via terminal:</p>
-                <div class="code-box">
-                  <span class="code-snippet">.\nexa-daemon.exe --server --port 25800</span>
-                  <button class="btn-copy-code" data-clipboard-text=".\nexa-daemon.exe --server --port 25800">
-                    <span>Copiar Comando</span>
-                  </button>
-                </div>
-              </div>
-            </div>
-
-          </div>
-        </div>
-
-        <!-- Conteúdo da Aba Linux -->
-        <div id="tab-content-linux" class="platform-tab-panel">
-          <div class="steps-container">
-            
-            <div class="step-card">
-              <div class="step-header">
-                <div class="step-number">1</div>
-                <div class="step-title">Download e Instalação do Pacote .deb</div>
-              </div>
-              <div class="step-body">
-                <p>Baixe o pacote oficial e instale via terminal:</p>
-                <div class="code-box">
-                  <span class="code-snippet">wget https://github.com/rafaelmaciels/Nexa/releases/latest/download/nexa_0.1.0_amd64.deb && sudo dpkg -i nexa_0.1.0_amd64.deb</span>
-                  <button class="btn-copy-code" data-clipboard-text="wget https://github.com/rafaelmaciels/Nexa/releases/latest/download/nexa_0.1.0_amd64.deb && sudo dpkg -i nexa_0.1.0_amd64.deb">
-                    <span>Copiar Comando</span>
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <div class="step-card">
-              <div class="step-header">
-                <div class="step-number">2</div>
-                <div class="step-title">Permissões de Emulação (/dev/uinput) e Firewall</div>
-              </div>
-              <div class="step-body">
-                <p>Permita que o usuário manipule o mouse e libere a porta no UFW:</p>
-                <div class="code-box">
-                  <span class="code-snippet">sudo modprobe uinput && sudo chmod 666 /dev/uinput && sudo usermod -aG input $USER && sudo ufw allow 25800/tcp</span>
-                  <button class="btn-copy-code" data-clipboard-text="sudo modprobe uinput && sudo chmod 666 /dev/uinput && sudo usermod -aG input $USER && sudo ufw allow 25800/tcp">
-                    <span>Copiar Comando</span>
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <div class="step-card">
-              <div class="step-header">
-                <div class="step-number">3</div>
-                <div class="step-title">Conectar ao Computador Host (Windows)</div>
-              </div>
-              <div class="step-body">
-                <p>Inicie o cliente apontando para o IP do seu computador principal:</p>
-                <div class="code-box">
-                  <span class="code-snippet">nexa-daemon --client 192.168.1.15:25800</span>
-                  <button class="btn-copy-code" data-clipboard-text="nexa-daemon --client 192.168.1.15:25800">
-                    <span>Copiar Comando</span>
-                  </button>
-                </div>
-                <p style="margin-top: 10px; font-size: 0.85rem; color: var(--text-muted);">
-                  * Na primeira conexão, confirme o código numérico SAS de 6 dígitos que surgirá nas duas telas para autenticar com segurança.
-                </p>
-              </div>
-            </div>
-
-          </div>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- Chamada para Ação Final -->
-    <section class="section" style="background: radial-gradient(circle at 50% 50%, rgba(99, 102, 241, 0.15) 0%, rgba(12, 14, 23, 0.9) 70%); text-align: center;">
-      <div class="container" style="max-width: 720px;">
-        <h2 style="font-size: 2.4rem; font-weight: 800; margin-bottom: 16px;">Pronto para transformar seu setup multi-telas?</h2>
-        <p style="font-size: 1.1rem; color: var(--text-secondary); margin-bottom: 32px;">
-          Código aberto, documentação técnica transparente e sem telemetria. Leia a documentação completa e participe do desenvolvimento.
-        </p>
-        <div style="display: flex; align-items: center; justify-content: center; gap: 16px; flex-wrap: wrap;">
-          <a href="./docs.html" class="btn btn-primary">
-            <span>Acessar Documentação Completa</span>
-          </a>
-          <a href="./roadmap.html" class="btn btn-secondary">
-            <span>Ver Status e Roadmap</span>
-          </a>
         </div>
       </div>
     </section>
 
   </main>
 
-  <!-- Rodapé -->
+  <!-- Rodapé com Navegação Estruturada de SEO -->
   <footer class="site-footer">
     <div class="container">
       <div class="footer-grid">
         <div>
           <div style="display: flex; align-items: center; gap: 10px;">
-            <img src="./assets/brand/nexa-icon-32.png" alt="Nexa Icon" style="height: 28px;">
+            <img src="./assets/brand/nexa-icon-32.png" alt="Nexa Icon" width="28" height="28">
             <span style="font-size: 1.2rem; font-weight: 700; color: #fff;">Nexa</span>
           </div>
           <p class="footer-brand-desc">
-            Software moderno de compartilhamento de mouse, teclado e clipboard em Rust de alta segurança e baixa latência.
+            Software de compartilhamento de mouse, teclado e clipboard em Rust de alta segurança, zero telemetria e latência quase nula.
           </p>
         </div>
 
         <div>
-          <div class="footer-col-title">Navegação</div>
+          <div class="footer-col-title">Páginas Principais</div>
           <ul class="footer-links">
-            <li><a href="./index.html" class="footer-link">Início</a></li>
-            <li><a href="./docs.html" class="footer-link">Documentação</a></li>
-            <li><a href="./roadmap.html" class="footer-link">Roadmap & Status</a></li>
-            <li><a href="#instalacao" class="footer-link">Instalação</a></li>
+            <li><a href="./" class="footer-link">Início</a></li>
+            <li><a href="./como-funciona/" class="footer-link">Como Funciona</a></li>
+            <li><a href="./recursos/" class="footer-link">Recursos & Comparativo</a></li>
+            <li><a href="./seguranca/" class="footer-link">Segurança & Criptografia</a></li>
+            <li><a href="./roadmap/" class="footer-link">Roadmap & Status</a></li>
           </ul>
         </div>
 
         <div>
-          <div class="footer-col-title">Plataformas</div>
+          <div class="footer-col-title">Instalação & Guias</div>
           <ul class="footer-links">
-            <li><a href="./docs.html#windows" class="footer-link">Windows 11 / 10</a></li>
-            <li><a href="./docs.html#linux" class="footer-link">Linux elementary OS 8.1</a></li>
-            <li><a href="./docs.html#linux" class="footer-link">Ubuntu & Debian x64</a></li>
-            <li><a href="./docs.html#diagnostico" class="footer-link">Diagnóstico de Rede</a></li>
+            <li><a href="./instalacao/" class="footer-link">Hub de Instalação</a></li>
+            <li><a href="./instalacao/windows/" class="footer-link">Guia Windows 11 / 10</a></li>
+            <li><a href="./instalacao/linux/" class="footer-link">Guia Linux elementary / Ubuntu</a></li>
+            <li><a href="./documentacao/" class="footer-link">Manual da Linha de Comando</a></li>
+            <li><a href="./solucao-de-problemas/" class="footer-link">Solução de Problemas</a></li>
           </ul>
         </div>
 
         <div>
-          <div class="footer-col-title">Comunidade</div>
+          <div class="footer-col-title">Comunidade & Ajuda</div>
           <ul class="footer-links">
-            <li><a href="https://github.com/rafaelmaciels/Nexa" target="_blank" rel="noopener noreferrer" class="footer-link">Código no GitHub</a></li>
-            <li><a href="https://github.com/rafaelmaciels/Nexa/issues" target="_blank" rel="noopener noreferrer" class="footer-link">Reportar Issue</a></li>
-            <li><a href="https://github.com/rafaelmaciels/Nexa/releases" target="_blank" rel="noopener noreferrer" class="footer-link">Releases & Binários</a></li>
-            <li><a href="https://github.com/rafaelmaciels/Nexa/blob/main/LICENSE" target="_blank" rel="noopener noreferrer" class="footer-link">Licença MIT / Apache</a></li>
+            <li><a href="./faq/" class="footer-link">Perguntas Frequentes (FAQ)</a></li>
+            <li><a href="https://github.com/rafaelmaciels/Nexa" target="_blank" rel="noopener noreferrer" class="footer-link">Repositório no GitHub</a></li>
+            <li><a href="https://github.com/rafaelmaciels/Nexa/issues" target="_blank" rel="noopener noreferrer" class="footer-link">Reportar Problema</a></li>
+            <li><a href="https://github.com/rafaelmaciels/Nexa/releases" target="_blank" rel="noopener noreferrer" class="footer-link">Download de Releases</a></li>
           </ul>
         </div>
       </div>

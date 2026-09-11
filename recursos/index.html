@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Recursos & Comparativo Técnico — Nexa KVM Share vs Barrier / Synergy / Deskflow</title>
+  <meta name="description" content="Conheça todos os recursos do Nexa e veja a tabela comparativa contra softwares legados de KVM (Barrier, Synergy, Deskflow) e KVMs físicos com fio.">
+  <meta name="keywords" content="recursos Nexa, comparativo KVM software, alternativa Barrier, alternativa Synergy, alternativa Deskflow, KVM Rust vs C++, KVM sem fios">
+  <meta name="author" content="Nexa Contributors">
+  <link rel="canonical" href="https://nexa.github.io/recursos/">
+  
+  <meta property="og:title" content="Recursos & Comparativo Técnico — Nexa KVM Share">
+  <meta property="og:description" content="Veja como o Nexa supera soluções legadas em latência, criptografia e estabilidade em Rust.">
+  <meta property="og:url" content="https://nexa.github.io/recursos/">
+  <meta property="og:image" content="https://nexa.github.io/assets/brand/nexa-logo-dark.png">
+
+  <link rel="icon" type="image/png" sizes="32x32" href="../assets/brand/nexa-icon-32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../assets/brand/nexa-icon-256.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+  <link rel="stylesheet" href="../assets/css/docs.css">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Início",
+            "item": "https://nexa.github.io/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Recursos",
+            "item": "https://nexa.github.io/recursos/"
+          }
+        ]
+      },
+      {
+        "@type": "SoftwareApplication",
+        "name": "Nexa KVM Share",
+        "operatingSystem": "Windows 11, Linux",
+        "applicationCategory": "DeveloperApplication",
+        "description": "Comparativo e recursos detalhados do Nexa contra softwares legados de compartilhamento de periféricos.",
+        "url": "https://nexa.github.io/recursos/"
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+
+  <div class="ambient-glow"></div>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="../" class="brand-wrapper">
+        <img src="../assets/brand/nexa-icon-64.png" alt="Nexa Logo" class="brand-logo-img" width="34" height="34">
+        <div class="brand-title-box">
+          <span class="brand-name">Nexa</span>
+          <span class="brand-tag">Recursos</span>
+        </div>
+      </a>
+
+      <nav aria-label="Navegação Principal">
+        <ul class="nav-menu">
+          <li><a href="../" class="nav-link">Início</a></li>
+          <li><a href="../como-funciona/" class="nav-link">Como Funciona</a></li>
+          <li><a href="../recursos/" class="nav-link active">Recursos</a></li>
+          <li><a href="../instalacao/" class="nav-link">Instalação</a></li>
+          <li><a href="../seguranca/" class="nav-link">Segurança</a></li>
+          <li><a href="../documentacao/" class="nav-link">Documentação</a></li>
+          <li><a href="../solucao-de-problemas/" class="nav-link">Ajuda</a></li>
+          <li><a href="../roadmap/" class="nav-link">Roadmap</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <a href="https://github.com/rafaelmaciels/Nexa" target="_blank" rel="noopener noreferrer" class="btn-github">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+          </svg>
+          <span>GitHub</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container" style="padding: 56px 24px 80px; max-width: 1040px;">
+    
+    <nav aria-label="Breadcrumbs" style="margin-bottom: 24px; font-size: 0.88rem; color: var(--text-muted);">
+      <a href="../" style="color: var(--accent); text-decoration: none;">Início</a>
+      <span style="margin: 0 8px;">/</span>
+      <span>Recursos & Comparativo</span>
+    </nav>
+
+    <header style="margin-bottom: 44px;">
+      <span class="section-tag">Análise Comparativa</span>
+      <h1 style="font-size: 2.5rem; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 16px;">
+        Recursos Técnicos & Comparativo de Mercado
+      </h1>
+      <p style="font-size: 1.15rem; color: var(--text-secondary); line-height: 1.6;">
+        Veja como o Nexa foi projetado para resolver as principais dores de estabilidade, segurança e latência encontradas em ferramentas legadas desenvolvidas nas últimas duas décadas.
+      </p>
+    </header>
+
+    <!-- Tabela Comparativa de Mercado (Alta Relevância SEO) -->
+    <section style="margin-bottom: 56px;">
+      <h2 style="font-size: 1.7rem; font-weight: 700; margin-bottom: 20px; color: #fff;">
+        Tabela Comparativa: Nexa vs Softwares Legados vs KVM Físico
+      </h2>
+
+      <div class="docs-table-wrapper">
+        <table class="docs-table">
+          <thead>
+            <tr>
+              <th>Critério / Funcionalidade</th>
+              <th style="color: #34d399; font-weight: 700;">Nexa (Rust 2021)</th>
+              <th>Barrier / Deskflow (C++)</th>
+              <th>Synergy 1.x (C++)</th>
+              <th>Switch KVM Físico</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Linguagem & Memória Segura</strong></td>
+              <td><span style="color: #34d399; font-weight: 600;">✓ Rust (Zero-crash)</span></td>
+              <td>✗ C++ (Dívidas técnicas antigas)</td>
+              <td>✗ C++ (Legado)</td>
+              <td>N/A (Hardware dedicado)</td>
+            </tr>
+            <tr>
+              <td><strong>Criptografia Nativa Padrão</strong></td>
+              <td><span style="color: #34d399; font-weight: 600;">✓ ChaCha20-Poly1305</span></td>
+              <td>Parcial (TLS complexo / sem SAS PIN)</td>
+              <td>Opcional / Paga</td>
+              <td>✗ Físico (Sem cifra)</td>
+            </tr>
+            <tr>
+              <td><strong>Prevenção MITM com PIN Visual</strong></td>
+              <td><span style="color: #34d399; font-weight: 600;">✓ SAS PIN de 6 dígitos</span></td>
+              <td>✗ Não possui</td>
+              <td>✗ Não possui</td>
+              <td>N/A</td>
+            </tr>
+            <tr>
+              <td><strong>Suporte a Mouses Gamers (1000Hz)</strong></td>
+              <td><span style="color: #34d399; font-weight: 600;">✓ Coalescência em 3ms</span></td>
+              <td>✗ Sobrecarga e perda de fluidez</td>
+              <td>✗ Queda de taxa de amostragem</td>
+              <td>✓ Direto via USB</td>
+            </tr>
+            <tr>
+              <td><strong>Clipboard Anti-Echo (Sem loops)</strong></td>
+              <td><span style="color: #34d399; font-weight: 600;">✓ Hash SHA-256</span></td>
+              <td>✗ Loops frequentes de replicação</td>
+              <td>✗ Falhas em strings longas</td>
+              <td>✗ Não transfere clipboard</td>
+            </tr>
+            <tr>
+              <td><strong>Dependência de Cabos Físicos</strong></td>
+              <td><span style="color: #34d399; font-weight: 600;">✓ Zero cabos (Rede Local)</span></td>
+              <td>✓ Zero cabos</td>
+              <td>✓ Zero cabos</td>
+              <td>✗ Emaranhado de cabos USB e HDMI</td>
+            </tr>
+            <tr>
+              <td><strong>Troca entre Telas</strong></td>
+              <td><span style="color: #34d399; font-weight: 600;">✓ Contínua (Encostar na borda)</span></td>
+              <td>✓ Contínua</td>
+              <td>✓ Contínua</td>
+              <td>✗ Aperto de botão físico com delay</td>
+            </tr>
+            <tr>
+              <td><strong>Suporte a Linux Wayland Moderno</strong></td>
+              <td><span style="color: #34d399; font-weight: 600;">✓ /dev/uinput nativo</span></td>
+              <td>Instável em Wayland puro</td>
+              <td>Exige X11 / XWayland</td>
+              <td>Independente de SO</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Recursos em Destaque -->
+    <section>
+      <h2 style="font-size: 1.7rem; font-weight: 700; margin-bottom: 24px; color: #fff;">
+        Detalhamento dos Recursos Nativos do Nexa
+      </h2>
+
+      <div class="features-grid" style="margin-bottom: 48px;">
+        <div class="feature-card">
+          <h3 class="feature-title">Zero Configuração na Nuvem</h3>
+          <p class="feature-text">
+            O Nexa não requer cadastro, contas online ou conexão com a internet para funcionar. Toda a descoberta, pareamento e transmissão acontece 100% de ponta a ponta na sua rede local privada.
+          </p>
+        </div>
+
+        <div class="feature-card">
+          <h3 class="feature-title">Tolerância a Troca de IP (DHCP)</h3>
+          <p class="feature-text">
+            A identidade criptográfica de cada computador é atrelada à sua chave pública Ed25519, e não ao endereço IP. Se o roteador alterar o IP do seu laptop, a conexão reconecta automaticamente sem exigir novo pareamento.
+          </p>
+        </div>
+
+        <div class="feature-card">
+          <h3 class="feature-title">Atalho de Emergência KVM</h3>
+          <p class="feature-text">
+            Se uma aplicação no computador remoto travar ou assumir foco exclusivo de tela cheia, basta pressionar a tecla <code>Esc</code> ou <code>Scroll Lock</code> no teclado físico para retornar o cursor à máquina local instantaneamente.
+          </p>
+        </div>
+
+        <div class="feature-card">
+          <h3 class="feature-title">Interface Gráfica Embutida Leve</h3>
+          <p class="feature-text">
+            O daemon traz um servidor web interno na porta 25802 com tema escuro e zero dependências pesadas de Electron, consumindo menos de 15 MB de memória RAM em repouso.
+          </p>
+        </div>
+      </div>
+
+      <div style="text-align: center; background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 32px;">
+        <h3 style="font-size: 1.3rem; font-weight: 700; margin-bottom: 12px; color: #fff;">Pronto para testar o Nexa?</h3>
+        <p style="color: var(--text-secondary); margin-bottom: 24px;">Siga o guia de instalação passo a passo para o seu sistema:</p>
+        <div style="display: flex; justify-content: center; gap: 14px; flex-wrap: wrap;">
+          <a href="../instalacao/windows/" class="btn btn-primary">
+            <span>Instalar no Windows 11 / 10 →</span>
+          </a>
+          <a href="../instalacao/linux/" class="btn btn-secondary">
+            <span>Instalar no Linux Wayland / Ubuntu →</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <div>© 2026 Nexa Contributors. Documentação Técnica para GitHub Pages (<code>nexa.github.io</code>).</div>
+        <div><a href="../">← Voltar à Página Inicial</a></div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../assets/js/main.js"></script>
+</body>
+</html>

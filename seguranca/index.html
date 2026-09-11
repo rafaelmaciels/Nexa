@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Segurança & Criptografia no Nexa — ChaCha20-Poly1305, Ed25519 e PIN SAS</title>
+  <meta name="description" content="Entenda como o Nexa protege suas senhas e cliques com criptografia de ponta a ponta ChaCha20-Poly1305, troca efêmera de chaves X25519 e confirmação visual SAS PIN contra ataques MITM.">
+  <meta name="keywords" content="segurança Nexa, ChaCha20 Poly1305 KVM, criptografia ponta a ponta KVM, PIN SAS Nexa, prevenir MITM kvm, segurança teclado rede">
+  <meta name="author" content="Nexa Contributors">
+  <link rel="canonical" href="https://nexa.github.io/seguranca/">
+
+  <meta property="og:title" content="Segurança & Criptografia no Nexa — Criptografia Militar sem Nuvem">
+  <meta property="og:description" content="Nenhum dado viaja em texto claro. Cifragem nativa de teclas e área de transferência com verificação de integridade e nonces estritos.">
+  <meta property="og:url" content="https://nexa.github.io/seguranca/">
+  <meta property="og:image" content="https://nexa.github.io/assets/brand/nexa-logo-dark.png">
+
+  <link rel="icon" type="image/png" sizes="32x32" href="../assets/brand/nexa-icon-32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../assets/brand/nexa-icon-256.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+  <link rel="stylesheet" href="../assets/css/docs.css">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Início",
+            "item": "https://nexa.github.io/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Segurança",
+            "item": "https://nexa.github.io/seguranca/"
+          }
+        ]
+      },
+      {
+        "@type": "TechArticle",
+        "headline": "Especificação de Segurança e Criptografia do Nexa KVM Share",
+        "description": "Análise técnica do canal autenticado ChaCha20-Poly1305, troca Diffie-Hellman X25519 e pareamento com código numérico SAS.",
+        "author": {
+          "@type": "Organization",
+          "name": "Nexa Project"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "Nexa Project"
+        },
+        "url": "https://nexa.github.io/seguranca/"
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+
+  <div class="ambient-glow"></div>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="../" class="brand-wrapper">
+        <img src="../assets/brand/nexa-icon-64.png" alt="Nexa Logo" class="brand-logo-img" width="34" height="34">
+        <div class="brand-title-box">
+          <span class="brand-name">Nexa</span>
+          <span class="brand-tag">Segurança</span>
+        </div>
+      </a>
+
+      <nav aria-label="Navegação Principal">
+        <ul class="nav-menu">
+          <li><a href="../" class="nav-link">Início</a></li>
+          <li><a href="../como-funciona/" class="nav-link">Como Funciona</a></li>
+          <li><a href="../recursos/" class="nav-link">Recursos</a></li>
+          <li><a href="../instalacao/" class="nav-link">Instalação</a></li>
+          <li><a href="../seguranca/" class="nav-link active">Segurança</a></li>
+          <li><a href="../documentacao/" class="nav-link">Documentação</a></li>
+          <li><a href="../solucao-de-problemas/" class="nav-link">Ajuda</a></li>
+          <li><a href="../roadmap/" class="nav-link">Roadmap</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <a href="https://github.com/rafaelmaciels/Nexa" target="_blank" rel="noopener noreferrer" class="btn-github">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+          </svg>
+          <span>GitHub</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container" style="padding: 56px 24px 80px; max-width: 960px;">
+    
+    <nav aria-label="Breadcrumbs" style="margin-bottom: 24px; font-size: 0.88rem; color: var(--text-muted);">
+      <a href="../" style="color: var(--accent); text-decoration: none;">Início</a>
+      <span style="margin: 0 8px;">/</span>
+      <span>Segurança & Criptografia</span>
+    </nav>
+
+    <article>
+      <header style="margin-bottom: 40px;">
+        <span class="section-tag">Garantias de Privacidade</span>
+        <h1 style="font-size: 2.5rem; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 16px;">
+          Segurança Criptográfica & Prevenção de Espionagem
+        </h1>
+        <p style="font-size: 1.15rem; color: var(--text-secondary); line-height: 1.6;">
+          Ao usar um software para compartilhar teclado entre máquinas, toda tecla digitada (senhas de banco, tokens de API, mensagens privadas) trafega pela sua rede local. Conheça as barreiras criptográficas implementadas no crate <code>nexa-crypto</code>.
+        </p>
+      </header>
+
+      <!-- 1. ChaCha20-Poly1305 -->
+      <section style="margin-bottom: 44px;">
+        <h2 style="font-size: 1.6rem; font-weight: 700; margin-bottom: 16px; color: #fff;">
+          1. Canal Seguro Autenticado: ChaCha20-Poly1305
+        </h2>
+        <p style="color: var(--text-secondary); line-height: 1.7; margin-bottom: 16px;">
+          O Nexa adota a cifra autenticada <strong>ChaCha20-Poly1305 (AEAD)</strong> por padrão em todas as sessões. Esta cifra foi selecionada por oferecer altíssimo desempenho em processadores modernos sem exigir aceleração de hardware específica de AES, garantindo latência insignificante tanto em PCs potentes quanto em laptops compactos.
+        </p>
+        <div class="docs-callout docs-callout-success">
+          <div class="callout-icon">🛡️</div>
+          <div>
+            <strong>Autenticação de Integridade (MAC):</strong> Cada pacote inclui uma tag de autenticação Poly1305 de 16 bytes. Se um atacante na rede tentar injetar cliques falsos ou alterar coordenadas de mouse, o pacote é imediatamente descartado antes de chegar ao sistema operacional.
+          </div>
+        </div>
+      </section>
+
+      <!-- 2. SAS PIN Visual -->
+      <section style="margin-bottom: 44px;">
+        <h2 style="font-size: 1.6rem; font-weight: 700; margin-bottom: 16px; color: #fff;">
+          2. Pareamento com Código Visual SAS PIN (Anti-MITM)
+        </h2>
+        <p style="color: var(--text-secondary); line-height: 1.7; margin-bottom: 16px;">
+          Em ataques clássicos de <em>Man-in-the-Middle</em> (MITM), um invasor na rede Wi-Fi intercepta a troca de chaves e se coloca entre os dois computadores. O Nexa anula essa possibilidade através do mecanismo <strong>Short Authentication String (SAS PIN)</strong>:
+        </p>
+        <div class="code-box" style="margin-bottom: 16px;">
+          <span class="code-snippet">Código de Pareamento de Segurança (SAS PIN): 482 731</span>
+        </div>
+        <p style="color: var(--text-secondary); line-height: 1.7;">
+          O código numérico de 6 dígitos formatado como <code>XXX YYY</code> é derivado matematicamente do segredo compartilhado calculado via <strong>HKDF-SHA256</strong>. Como os computadores estão na mesma mesa física, basta que o usuário confirme se o número exibido em uma tela é exatamente igual ao da outra tela.
+        </p>
+      </section>
+
+      <!-- 3. Chaves Ed25519 e X25519 -->
+      <section style="margin-bottom: 44px;">
+        <h2 style="font-size: 1.6rem; font-weight: 700; margin-bottom: 16px; color: #fff;">
+          3. Identidade por Chave Ed25519 e Troca Efêmera X25519
+        </h2>
+        <p style="color: var(--text-secondary); line-height: 1.7; margin-bottom: 16px;">
+          A arquitetura de identidade do Nexa combina chaves estáticas de longo prazo com chaves de sessão efêmeras:
+        </p>
+        <ul>
+          <li style="color: var(--text-secondary); margin-bottom: 10px; line-height: 1.6;">
+            <strong>Identidade de Longo Prazo (Ed25519):</strong> Cada computador gera sua chave pública e privada permanente, salva no arquivo de configuração local. Isso permite reconhecer computadores confiáveis mesmo que o roteador altere seus endereços IP via DHCP.
+          </li>
+          <li style="color: var(--text-secondary); margin-bottom: 10px; line-height: 1.6;">
+            <strong>Perfect Forward Secrecy (X25519 ECDH):</strong> Para cada conexão TCP estabelecida, um novo par de chaves efêmeras é gerado e descartado ao final da sessão. Mesmo que uma chave futura seja comprometida, gravações passadas de tráfego de rede não podem ser descriptografadas.
+          </li>
+        </ul>
+      </section>
+
+      <!-- 4. Anti-Replay -->
+      <section style="margin-bottom: 44px;">
+        <h2 style="font-size: 1.6rem; font-weight: 700; margin-bottom: 16px; color: #fff;">
+          4. Proteção Anti-Replay com Nonces Sequenciais Estritos
+        </h2>
+        <p style="color: var(--text-secondary); line-height: 1.7; margin-bottom: 16px;">
+          Um ataque de repetição (Replay Attack) consiste em gravar um pacote legítimo (por exemplo, a digitação de uma senha) e reenviá-lo à máquina receptora. No Nexa:
+        </p>
+        <ul style="color: var(--text-secondary); line-height: 1.7; padding-left: 20px;">
+          <li>Cada pacote recebe um nonce único de 12 bytes composto por um prefixo de direção (<code>SRV\x01</code> para transmissões do servidor e <code>CLI\x01</code> para o cliente) e um contador incremental de 64 bits.</li>
+          <li>Qualquer pacote que chegue com número de sequência menor ou igual ao último recebido é sumariamente rejeitado pelo canal seguro.</li>
+        </ul>
+      </section>
+
+      <!-- Próximos Passos -->
+      <div style="background: var(--bg-surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; margin-top: 48px;">
+        <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 10px; color: #fff;">Próximas Leituras Técnicas:</h3>
+        <p style="color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 20px;">
+          Explore a documentação completa dos 8 crates ou inicie a instalação:
+        </p>
+        <div style="display: flex; gap: 14px; flex-wrap: wrap;">
+          <a href="../documentacao/" class="btn btn-primary">
+            <span>Documentação Técnica & CLI →</span>
+          </a>
+          <a href="../como-funciona/" class="btn btn-secondary">
+            <span>Como Funciona o Nexa →</span>
+          </a>
+        </div>
+      </div>
+
+    </article>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <div>© 2026 Nexa Contributors. Documentação Técnica para GitHub Pages (<code>nexa.github.io</code>).</div>
+        <div><a href="../">← Voltar à Página Inicial</a></div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../assets/js/main.js"></script>
+</body>
+</html>
